@@ -8,6 +8,9 @@ Three files do everything.
 | `index.html` | All the content — every word on the page is here |
 | `styles.css` | The whole visual system; colours are tokens at the top |
 | `app.js` | Theme toggle, scroll reveals, typewriter, counters, nav, tilt |
+| `hero-assembly.js` | The scroll-driven assembly section (self-contained) |
+| `hero-assembly.css` | Styles for that section only |
+| `serve.py` | Local preview server with caching disabled |
 | `Halima_Fahim_CV.pdf` | Linked by both "Download CV" buttons |
 
 ---
@@ -20,8 +23,13 @@ there are no ES modules, so no local server is needed.
 If you'd rather serve it:
 
 ```bash
-python -m http.server 8000    # then open http://localhost:8000
+python serve.py               # opens http://localhost:8000
+python serve.py 8000 lan      # also reachable from your phone on the same wifi
 ```
+
+`serve.py` disables caching. Python's plain `http.server` sends no
+`Cache-Control` header, so browsers keep serving a stale `styles.css` after an
+edit - which will waste an hour of your life if you hit it.
 
 ---
 
@@ -64,6 +72,52 @@ projects section and edit it. Bump the `proj-idx` number. Drop the
 **The stats band** — `data-to` is the number it counts up to.
 
 ---
+
+## The scroll-driven assembly section
+
+Between the stats band and About sits a 400vh pinned section where an agent
+system assembles itself as you scroll: a request node appears, then router,
+tools, memory and the llm call one at a time, edges draw between them, a pulse
+of data sweeps the finished graph, and a response node resolves.
+
+It lives in exactly two files, `hero-assembly.js` and `hero-assembly.css`, plus
+one `<section class="assembly">` block and two tags in `index.html`. It touches
+nothing else - `app.js` and `styles.css` are not involved.
+
+**To remove it:** delete those two files, their `<link>` and `<script>` tags, and
+the section block. Nothing else changes.
+
+**To rewrite the captions:** they are plain HTML in that section block. Each
+carries the progress window it appears in:
+
+```html
+<p class="assembly-caption" data-from="0.25" data-to="0.45">It gets routed.</p>
+```
+
+`data-from` / `data-to` are scroll progress, 0 to 1. Keep the windows from
+overlapping and only one caption is ever on screen.
+
+**To change the graph:** `NODES` and `EDGES` at the top of `hero-assembly.js`.
+Each node carries its position in world units and the `from`/`to` progress
+window over which it fades in. Each edge carries its own window plus a `depth`,
+which is how many hops it sits from the request node - that is what makes the
+data pulse sweep outward in order rather than firing everywhere at once.
+
+**To retime the camera:** the `CAM` keyframe array. Each entry is a progress
+point with an x/y position and a zoom. They are interpolated with smootherstep,
+so the drift never snaps between keyframes.
+
+The whole thing is one pure function: `render(p)` depends only on scroll
+progress, with no state carried between frames - not even the drifting particle
+field, which is seeded and positioned from `p`. That is why scrubbing backwards
+is exact rather than approximately undone.
+
+Pinning is CSS `position: sticky`. The browser drives it, so there is no scroll
+hijacking and no library.
+
+Under `prefers-reduced-motion`, or on viewports narrower than 900px, it binds no
+scroll listener at all: the section collapses to a normal-height panel showing
+the finished graph, so there is no dead scroll to wade through.
 
 ## The hero scene
 
