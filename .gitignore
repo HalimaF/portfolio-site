@@ -1,0 +1,15 @@
+# dependencies
+node_modules/
+
+# OS noise
+.DS_Store
+Thumbs.db
+
+# previous portfolio version, kept locally for reference only
+_archive/
+
+# design-tool state and review screenshots
+.impeccable/
+
+# local preview server, not part of the deployed site
+serve.py
