@@ -16,7 +16,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Sora:wght@600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
-<link rel="stylesheet" href="hero-assembly.css">
 </head>
 <body>
 
@@ -155,29 +154,6 @@
     <div class="stat reveal" data-delay="1"><b class="count" data-to="15" data-suffix="+">0</b><span>Public repositories</span></div>
     <div class="stat reveal" data-delay="2"><b class="count" data-to="3">0</b><span>Leadership roles</span></div>
     <div class="stat reveal" data-delay="3"><b>2027</b><span>BS CS — expected</span></div>
-  </div>
-</section>
-
-<!-- ===================== AGENT ASSEMBLY (scroll-driven) =====================
-     Self-contained. Delete this block, the two hero-assembly tags, and the
-     two hero-assembly files to remove the feature entirely. -->
-<section class="assembly" aria-label="How a request moves through an agent system">
-  <div class="assembly-pin">
-    <canvas class="assembly-canvas" id="assemblyCanvas" aria-hidden="true"></canvas>
-
-    <div class="assembly-captions">
-      <p class="assembly-caption" data-from="0.05" data-to="0.20">Every request starts somewhere.</p>
-      <p class="assembly-caption" data-from="0.25" data-to="0.45">It gets routed.</p>
-      <p class="assembly-caption" data-from="0.50" data-to="0.70">Tools, memory, and a model do the work.</p>
-      <p class="assembly-caption" data-from="0.75" data-to="0.95">Then it comes back as an answer.</p>
-    </div>
-
-    <div class="assembly-progress" aria-hidden="true"><i></i></div>
-
-    <p class="assembly-sr">
-      A request enters the system, is routed, calls tools, memory and a language
-      model, and returns as an answer.
-    </p>
   </div>
 </section>
 
@@ -439,6 +415,5 @@
 </footer>
 
 <script src="app.js"></script>
-<script src="hero-assembly.js"></script>
 </body>
 </html>
