@@ -67,7 +67,7 @@ If you add a section, keep to that and it will fit.
 
 | Role | Face |
 |---|---|
-| Display | Instrument Serif (the name, section headings, pull quotes) |
+| Display | Bodoni Moda (the name, section headings, pull quotes) |
 | Body | IBM Plex Sans |
 | Labels, meta, numbers | IBM Plex Mono, uppercase, letterspaced |
 
@@ -103,12 +103,30 @@ up.
 
 ---
 
+## The halftone plate
+
+The hero carries a printed dot-field drawn on a canvas, in ink, flat. The dots
+describe a sphere the way a letterpress halftone would — form comes from dot
+*size*, not from shading, so there is no gradient anywhere in it.
+
+**Your cursor is a lens.** Dots near it swell and are displaced outward, as
+though the plate were being pressed. Move off it, or open the page on a phone,
+and the lens drifts on its own slow orbit instead, so it is never simply static.
+
+It reads the live `--ink` token, so it inverts by itself in night mode — light
+dots on dark. It stops drawing entirely when scrolled off screen or when the
+tab is backgrounded, and under `prefers-reduced-motion` it draws one still frame
+and binds no pointer listeners at all.
+
+To retune it, the top of section 8 in `app.js`: `STEP` is the screen ruling (dot
+pitch), `R` the sphere radius, `lensR` how far the cursor's influence reaches,
+and `MAXR` the cap that stops neighbouring dots merging into a blot.
+
 ## Motion
 
-Restrained by design: a short fade-and-rise as each block enters the viewport,
-counters that tick up once, and an underline that grows under the active nav
-link. That is the whole inventory — there is no canvas, no parallax, no
-scroll-jacking.
+Otherwise restrained by design: a short fade-and-rise as each block enters the
+viewport, counters that tick up once, and an underline that grows under the
+active nav link. No parallax, no scroll-jacking.
 
 `data-delay` on a `.reveal` element staggers it (`1` = 70ms, `2` = 140ms, and
 so on).
@@ -122,7 +140,8 @@ That is a real skip, not a slowdown.
 
 - No horizontal overflow at 320 / 360 / 390 / 430 / 768 / 1024 / 1280 / 1440 /
   1920px, measured as `documentElement.scrollWidth === clientWidth`
-- Both themes
+- Both themes, including the plate inverting with the ink token
+- The cursor lens confirmed to drive the canvas (pixel diff before/after a move)
 - Keyboard navigable: skip link, focus-visible rings, anchors move focus to the
   section they point at
 - Prints cleanly — the masthead and drawer drop out

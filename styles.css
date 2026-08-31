@@ -24,7 +24,7 @@
   --accent:    #C2410C;   /* burnt vermilion       */
   --accent-2:  #9A340A;
 
-  --serif: 'Instrument Serif', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+  --serif: 'Bodoni Moda', 'Didot', 'Bodoni MT', 'Iowan Old Style', Georgia, serif;
   --sans:  'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --mono:  'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 
@@ -173,7 +173,35 @@ a{ color:inherit; text-decoration:none; }
 .drawer a:last-child{ border-bottom:0; }
 
 /* ---------- 4. HERO ---------- */
-.hero{ padding-block:clamp(56px,11vh,116px) clamp(48px,8vh,84px); }
+.hero{ padding-block:clamp(48px,8vh,88px) clamp(40px,6vh,68px); }
+
+.hero-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);
+  gap:clamp(28px,5vw,64px);
+  align-items:center;
+  margin-bottom:clamp(34px,5vw,56px);
+}
+
+/* the halftone plate */
+.plate{
+  position:relative;
+  margin:0;
+  border:1px solid var(--rule-2);
+  background:var(--paper-2);
+  aspect-ratio:1 / 1.06;
+}
+.plate canvas{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  display:block;
+}
+.plate figcaption{
+  position:absolute; left:12px; bottom:10px;
+  font-family:var(--mono); font-size:9.5px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--ink-3);
+  pointer-events:none;
+}
 
 .kicker{
   font-family:var(--mono);
@@ -185,32 +213,22 @@ a{ color:inherit; text-decoration:none; }
 
 .display{
   font-family:var(--serif);
-  font-size:clamp(4.2rem, 15vw, 11rem);
-  line-height:.86;
-  letter-spacing:-.02em;
-  margin:0 0 clamp(36px,6vw,64px);
-  text-indent:-.04em;              /* optical: pull the H to the margin */
+  font-size:clamp(3.4rem, 9.5vw, 7.4rem);
+  line-height:.94;
+  letter-spacing:-.015em;
+  margin:0 0 clamp(26px,4vw,40px);
 }
 .display em{
   font-style:italic;
   color:var(--accent);
 }
 
-.hero-body{
-  display:grid;
-  grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);
-  gap:clamp(28px,6vw,72px);
-  align-items:start;
-  padding-top:clamp(20px,3vw,32px);
-  border-top:1px solid var(--rule);
-}
-
 .standfirst{
-  font-size:clamp(1.15rem,2vw,1.45rem);
-  line-height:1.5;
-  max-width:34ch;
+  font-size:clamp(1.05rem,1.5vw,1.25rem);
+  line-height:1.55;
+  max-width:44ch;
   margin:0;
-  color:var(--ink);
+  color:var(--ink-2);
 }
 
 /* definition list used as a colophon block */
@@ -234,7 +252,7 @@ a{ color:inherit; text-decoration:none; }
 
 .actions{
   display:flex; flex-wrap:wrap; gap:10px;
-  margin:clamp(32px,5vw,52px) 0 0;
+  margin:clamp(24px,3.5vw,34px) 0 0;
 }
 .action{
   display:inline-block;
@@ -467,7 +485,8 @@ a{ color:inherit; text-decoration:none; }
 @media (max-width:1000px){
   .masthead-nav{ display:none; }
   .menu-toggle{ display:inline-block; }
-  .hero-body{ grid-template-columns:1fr; }
+  .hero-grid{ grid-template-columns:1fr; }
+  .plate{ aspect-ratio:1 / .62; }
   .prose-grid{ grid-template-columns:1fr; }
   .ledger-grid{ grid-template-columns:repeat(2,1fr); row-gap:28px; }
   .ledger-item:nth-child(3){ border-left:0; padding-left:0; }
