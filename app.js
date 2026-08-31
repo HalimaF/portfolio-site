@@ -308,8 +308,38 @@
       });
     });
 
-    // arrive with it already working, so nobody has to guess what it does
-    render('agentic AI multi-agent');
+    /* ---- demonstrate itself ----------------------------------------
+       People do not read a label above an empty search box; they read a
+       box that is visibly doing something. So on load it types a query
+       itself, one character at a time, re-ranking as it goes. Any real
+       interaction cancels it immediately and hands control back. */
+    var demoTimer = null, demoLive = false;
+
+    function stopDemo() {
+      demoLive = false;
+      clearTimeout(demoTimer);
+    }
+
+    ['focus', 'keydown', 'input', 'pointerdown'].forEach(function (ev) {
+      input.addEventListener(ev, stopDemo);
+    });
+
+    if (reduced) {
+      input.value = 'agentic AI';
+      render(input.value);
+    } else {
+      render('agentic AI multi-agent');       // something on screen at once
+      demoLive = true;
+      var phrase = 'fraud detection', ci = 0;
+
+      demoTimer = setTimeout(function tick() {
+        if (!demoLive) return;
+        ci++;
+        input.value = phrase.slice(0, ci);
+        render(input.value);
+        if (ci < phrase.length) demoTimer = setTimeout(tick, 80);
+      }, 1100);
+    }
   })();
 
   /* ---------- 8. ANCHORS ---------- */

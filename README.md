@@ -47,8 +47,10 @@ gitignored already.
 
 ## The design
 
-An editorial print direction: warm paper stock, ink-black text, one accent, and
-hierarchy built from type size and whitespace rather than decoration.
+An editorial layout run loud: white ground, true-black text, and one electric
+accent used in large blocks. The structure is still typographic — hairline
+rules, no cards, no gradients — but the contrast is high and the accent is
+unmissable.
 
 Deliberately **not** used, because each is a signature of the generated-portfolio
 look this replaced:
@@ -75,11 +77,16 @@ If you add a section, keep to that and it will fit.
 follows:
 
 ```css
---paper:  #F4F1EA;   /* warm stock, not white */
---ink:    #16150F;   /* near-black, warm      */
---accent: #1C5B45;   /* deep green            */
---rule:   #DAD3C2;   /* hairline              */
+--paper:     #FFFFFF;   /* near-white */
+--ink:       #0A0A0A;   /* true black */
+--accent:    #FF3B00;   /* electric orange-red */
+--on-accent: #0A0A0A;   /* text ON the accent — black, not white */
 ```
+
+The accent is used in **blocks**, not just marks: the stats band is a solid
+field of it, every chapter head carries a bar of it, and the primary button is
+filled with it. Text sitting on the accent is black — white on this orange
+fails contrast at small sizes.
 
 There are two themes, `paper` and `night`, defined in that same block. `night`
 is a warm dark — deliberately not blue-black. The toggle sits in the masthead
