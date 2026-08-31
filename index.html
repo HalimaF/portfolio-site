@@ -76,13 +76,33 @@
       </p>
     </div>
 
-    <figure class="plate reveal" data-delay="2">
-      <canvas id="plate" aria-hidden="true"></canvas>
-      <figcaption>
-        <span>Illustrative attention weights</span>
-        <span class="readout" id="plateReadout">Hover a cell to inspect a pair</span>
-      </figcaption>
-    </figure>
+    <div class="ask reveal" data-delay="2">
+      <div class="ask-head">
+        <label for="askInput">Ask my CV</label>
+        <span class="ask-engine">BM25 &#183; in your browser</span>
+      </div>
+
+      <div class="ask-field">
+        <input id="askInput" type="search" autocomplete="off" spellcheck="false"
+               placeholder="agentic AI, FastAPI, fraud detection&#8230;"
+               aria-describedby="askNote">
+      </div>
+
+      <p class="ask-chips">
+        <button type="button" data-q="agentic AI multi-agent">agentic AI</button>
+        <button type="button" data-q="FastAPI backend API">FastAPI</button>
+        <button type="button" data-q="agent security guardrails">agent security</button>
+        <button type="button" data-q="document extraction OCR fraud">document AI</button>
+        <button type="button" data-q="pandas data pipeline">data</button>
+      </p>
+
+      <div class="ask-results" id="askResults" aria-live="polite"></div>
+
+      <p class="ask-note" id="askNote">
+        Real ranked retrieval over the r&#233;sum&#233; below &#8212; no model, no server,
+        nothing invented.
+      </p>
+    </div>
   </div>
 
   <div class="wrap">

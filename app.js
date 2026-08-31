@@ -1,8 +1,8 @@
 /* =============================================================
    Halima Fahim — editorial portfolio
 
-   Theme, reveals, counters, nav state, mobile drawer, anchors, and the
-   attention matrix in the hero.
+   Theme, reveals, counters, nav state, drawer, anchors, and the
+   retrieval engine in the hero.
    ============================================================= */
 (function () {
   'use strict';
@@ -23,13 +23,9 @@
   var stored = null;
   try { stored = localStorage.getItem('hf-theme'); } catch (e) {}
 
-  if (stored === 'paper' || stored === 'night') {
-    applyTheme(stored);
-  } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    applyTheme('night');
-  } else {
-    applyTheme('paper');
-  }
+  if (stored === 'paper' || stored === 'night') applyTheme(stored);
+  else if (window.matchMedia('(prefers-color-scheme: dark)').matches) applyTheme('night');
+  else applyTheme('paper');
 
   var toggle = $('#themeToggle');
   if (toggle) {
@@ -56,10 +52,7 @@
   } else {
     var obs = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('in');
-          obs.unobserve(entry.target);
-        }
+        if (entry.isIntersecting) { entry.target.classList.add('in'); obs.unobserve(entry.target); }
       });
     }, { threshold: 0.1, rootMargin: '0px 0px -6% 0px' });
     revealables.forEach(function (el) { obs.observe(el); });
@@ -69,15 +62,13 @@
   function runCount(el) {
     var target = parseFloat(el.getAttribute('data-to')) || 0;
     var suffix = el.getAttribute('data-suffix') || '';
-
     if (reduced) { el.textContent = target + suffix; return; }
 
     var duration = 1100, start = null;
     function step(ts) {
       if (start === null) start = ts;
       var p = Math.min((ts - start) / duration, 1);
-      var eased = 1 - Math.pow(1 - p, 3);
-      el.textContent = Math.round(target * eased) + (p === 1 ? suffix : '');
+      el.textContent = Math.round(target * (1 - Math.pow(1 - p, 3))) + (p === 1 ? suffix : '');
       if (p < 1) requestAnimationFrame(step);
     }
     requestAnimationFrame(step);
@@ -85,9 +76,8 @@
 
   var counters = $$('.count');
   if (counters.length) {
-    if (!('IntersectionObserver' in window)) {
-      counters.forEach(runCount);
-    } else {
+    if (!('IntersectionObserver' in window)) counters.forEach(runCount);
+    else {
       var cObs = new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
           if (entry.isIntersecting) { runCount(entry.target); cObs.unobserve(entry.target); }
@@ -104,276 +94,225 @@
     .filter(Boolean);
 
   var ticking = false;
-
   function onScroll() {
     var y = window.scrollY || window.pageYOffset;
     var line = y + window.innerHeight * 0.3;
     var activeId = null;
-
     sections.forEach(function (sec) { if (sec.offsetTop <= line) activeId = sec.id; });
     navLinks.forEach(function (a) {
       a.classList.toggle('active', a.getAttribute('href') === '#' + activeId);
     });
-
     ticking = false;
   }
-
   window.addEventListener('scroll', function () {
     if (!ticking) { ticking = true; requestAnimationFrame(onScroll); }
   }, { passive: true });
   onScroll();
 
   /* ---------- 6. DRAWER ---------- */
-  var menuBtn = $('#menuBtn');
-  var drawer  = $('#mobileMenu');
-
+  var menuBtn = $('#menuBtn'), drawer = $('#mobileMenu');
   function setMenu(open) {
     if (!menuBtn || !drawer) return;
     menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
     menuBtn.textContent = open ? 'Close' : 'Menu';
     drawer.hidden = !open;
   }
-
-  if (menuBtn) {
-    menuBtn.addEventListener('click', function () {
-      setMenu(menuBtn.getAttribute('aria-expanded') !== 'true');
-    });
-  }
-  if (drawer) {
-    drawer.addEventListener('click', function (e) {
-      if (e.target.closest('a')) setMenu(false);
-    });
-  }
+  if (menuBtn) menuBtn.addEventListener('click', function () {
+    setMenu(menuBtn.getAttribute('aria-expanded') !== 'true');
+  });
+  if (drawer) drawer.addEventListener('click', function (e) {
+    if (e.target.closest('a')) setMenu(false);
+  });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setMenu(false); });
   window.addEventListener('resize', function () { if (window.innerWidth > 1000) setMenu(false); });
 
-
   /* =============================================================
-     8. ATTENTION MATRIX
+     7. RETRIEVAL OVER THE CV
 
-     A printed attention map: the square grid a transformer produces
-     when every token scores every earlier token. Rows are queries,
-     columns are keys, dot size is the weight. Causal, so nothing
-     attends forward - hence the triangle.
+     A real ranked-retrieval engine, not a chat box. It indexes the
+     résumé below with BM25 — the standard lexical ranking function —
+     and returns the passages that actually match, scored.
 
-     Hovering reads out a single pair, the way you would inspect a real
-     attention head.
+     It is deliberately NOT a language model. It cannot answer in
+     sentences, and it cannot invent anything: every word it shows is a
+     word already written further down the page. On a portfolio where
+     nothing else is fabricated, a hallucinating chatbot would be the
+     one dishonest thing on it.
 
-     The weights are ILLUSTRATIVE, not measured. They are generated
-     from a deterministic function shaped like real decoder attention -
-     a strong diagonal, a sink on the first token, recency decay - and
-     the caption says so on the page. Nothing here is presented as an
-     experimental result.
-
-     Drawn flat in ink: dot size carries the value, so there is no
-     gradient, glow or heatmap ramp anywhere in it.
+     THE CORPUS IS THE ONLY THING TO EDIT. Add an entry and it becomes
+     searchable; the index rebuilds on load.
      ============================================================= */
-  (function attention() {
-    var canvas = document.getElementById('plate');
-    if (!canvas || !canvas.getContext) return;
+  (function retrieval() {
+    var input   = $('#askInput');
+    var results = $('#askResults');
+    if (!input || !results) return;
 
-    var fig = canvas.parentNode;
-    var ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    /* ---- the corpus: every passage comes from the CV ---- */
+    var CORPUS = [
+      { s: 'Experience', t: 'AI Intern, Systems Limited', a: '#experience',
+        x: 'Built agentic AI workflows for an enterprise client using LangChain, LangGraph, FastAPI and SQLAlchemy.' },
+      { s: 'Experience', t: 'AI Intern, Systems Limited', a: '#experience',
+        x: 'Implemented security features for AI agents, constraining agent behaviour to safe, reliable, approved actions.' },
+      { s: 'Experience', t: 'AI Intern, Systems Limited', a: '#experience',
+        x: 'Designed multi-agent architectures and integrated them with backend services and database layers.' },
+      { s: 'Experience', t: 'Backend Intern, Dr Coders', a: '#experience',
+        x: 'Designed, built and maintained RESTful APIs supporting scalable web applications.' },
+      { s: 'Experience', t: 'Backend Intern, Dr Coders', a: '#experience',
+        x: 'Integrated backend components to streamline data flow and improve system efficiency.' },
+      { s: 'Experience', t: 'Backend Intern, Dr Coders', a: '#experience',
+        x: 'Collaborated with frontend developers to define API contracts and deliver features to production.' },
+      { s: 'Experience', t: 'Project Management Intern, Excelerate', a: '#experience',
+        x: 'Coordinated planning and delivery tracking for a fully remote, cross-functional team across multiple time zones.' },
 
-    var TOKENS = ['the', 'agent', 'reads', 'the', 'request', 'then', 'calls', 'a', 'tool'];
-    var N = TOKENS.length;
+      { s: 'Work', t: 'FinAgent Pro', a: '#work',
+        x: 'A multi-agent pipeline that ingests financial documents, extracts structured fields with LayoutLMv3 and OCR, and flags fraud signals via FinBERT.' },
+      { s: 'Work', t: 'FinAgent Pro', a: '#work',
+        x: 'Automates financial document workflows end to end, replacing manual field entry and review. Python, LangChain, LayoutLMv3, FinBERT, OCR.' },
+      { s: 'Work', t: 'Smart Resume Analyzer', a: '#work',
+        x: 'A full-stack app that parses resumes, extracts skills and experience, and scores them against a target job description. JavaScript, Python, Flask.' },
+      { s: 'Work', t: 'Smart Resume Analyzer', a: '#work',
+        x: 'Generates ATS-style feedback on formatting, keyword coverage and section structure.' },
+      { s: 'Work', t: 'Sales, Inventory & HR System', a: '#work',
+        x: 'A Flask dashboard unifying sales forecasting, inventory tracking and employee records, built over historical transaction data. Python, Flask, Pandas, SQL.' },
 
-    var W = 0, H = 0, DPR = 1;
-    var gx = 0, gy = 0, cell = 0;         // grid origin and cell size
-    var padL = 0, padT = 0;               // label margins, needed when drawing
-    var readout = document.getElementById('plateReadout');
-    var hoverI = -1, hoverJ = -1;         // hovered query row / key column
+      { s: 'Toolkit', t: 'Languages', a: '#skills', x: 'Python, SQL, JavaScript.' },
+      { s: 'Toolkit', t: 'AI & ML', a: '#skills',
+        x: 'LangChain, LangGraph, Hugging Face Transformers, scikit-learn, FinBERT, LayoutLMv3, OCR.' },
+      { s: 'Toolkit', t: 'Backend', a: '#skills', x: 'FastAPI, Flask, SQLAlchemy, REST API design.' },
+      { s: 'Toolkit', t: 'Data', a: '#skills',
+        x: 'Pandas, NumPy, feature engineering, data preprocessing, data pipelines.' },
+      { s: 'Toolkit', t: 'Frontend & tools', a: '#skills', x: 'React, HTML/CSS, Git, GitHub, Selenium.' },
 
-    function token(el) {
-      return getComputedStyle(document.documentElement).getPropertyValue(el).trim();
+      { s: 'Education', t: 'BS Computer Science', a: '#education',
+        x: 'Kinnaird College for Women, Lahore, 2023 to 2027 expected. Coursework: Machine Learning, Data Structures and Algorithms, Database Systems, Operating Systems.' },
+      { s: 'Education', t: 'Leadership', a: '#education',
+        x: 'Logistics Director, IEEE Women in Engineering. Senior Representative, Computer Science Club. Ambassador, IEEE Xtreme 19.0.' },
+
+      { s: 'Availability', t: 'Open to work', a: '#contact',
+        x: 'Available part-time immediately and full-time from June 2027. Open to remote and contract roles worldwide. Based in Lahore, Pakistan, UTC+5.' }
+    ];
+
+    /* ---- tokenising ---- */
+    var STOP = {};
+    ('a an the and or of to in for with on at by is are was were be been it its this that as from into '
+     + 'his her their your our i she he they them we you').split(' ')
+      .forEach(function (w) { STOP[w] = 1; });
+
+    // crude suffix stripping — enough to bind plurals and gerunds together
+    function stem(w) {
+      if (w.length > 5 && /ing$/.test(w)) return w.slice(0, -3);
+      if (w.length > 4 && /(ed|es)$/.test(w)) return w.slice(0, -2);
+      if (w.length > 3 && /s$/.test(w) && !/ss$/.test(w)) return w.slice(0, -1);
+      return w;
     }
 
-    function resize() {
-      var r = fig.getBoundingClientRect();
-      if (!r.width || !r.height) return;
-      DPR = Math.min(window.devicePixelRatio || 1, 2);
-      W = r.width; H = r.height;
-      canvas.width = Math.round(W * DPR);
-      canvas.height = Math.round(H * DPR);
-      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-
-      padL = Math.min(78, W * 0.20);       // room for row labels
-      padT = Math.min(76, H * 0.20);       // room for rotated column labels
-      var padR = 16, padB = 34;
-
-      cell = Math.min((W - padL - padR) / N, (H - padT - padB) / N);
-      gx = padL + (W - padL - padR - cell * N) * 0.5;
-      gy = padT + (H - padT - padB - cell * N) * 0.35;
-    }
-
-    /* --- illustrative weights, shaped like causal decoder attention --- */
-    function rawWeight(i, j, t) {
-      if (j > i) return 0;                          // causal mask
-      var d = i - j;
-      var recency = Math.exp(-d * 0.52);            // nearby tokens dominate
-      var sink    = (j === 0) ? 0.42 : 0;           // attention sink on token 0
-      var self    = (d === 0) ? 0.46 : 0;
-      var drift   = 0.16 * (0.5 + 0.5 * Math.sin(i * 2.7 + j * 1.9 + t * 0.00035));
-      return recency + sink + self + drift;
-    }
-
-    function rowWeights(i, t) {
-      var out = [], sum = 0, j;
-      for (j = 0; j < N; j++) { out[j] = rawWeight(i, j, t); sum += out[j]; }
-      if (sum > 0) for (j = 0; j < N; j++) out[j] /= sum;
+    function tokenise(text) {
+      var raw = String(text).toLowerCase().match(/[a-z0-9+#.]+/g) || [];
+      var out = [];
+      for (var i = 0; i < raw.length; i++) {
+        var w = raw[i].replace(/^\.+|\.+$/g, '');
+        if (!w || STOP[w] || w.length < 2) continue;
+        out.push(stem(w));
+      }
       return out;
     }
 
-    function draw(t) {
-      if (!W || !H || !cell) return;
+    /* ---- index ---- */
+    var N = CORPUS.length, df = {}, avgdl = 0, docs = [];
 
-      var ink = token('--ink') || '#16150F';
-      var accent = token('--accent') || '#1B4079';
-      var dim = token('--ink-3') || '#8C8674';
-
-      ctx.clearRect(0, 0, W, H);
-      ctx.textBaseline = 'middle';
-
-      var mono = 'px "IBM Plex Mono", ui-monospace, monospace';
-      var labelSize = Math.max(8, Math.min(11, cell * 0.34));
-
-      /* --- axis captions --- */
-      ctx.font = '500 ' + Math.max(8, labelSize - 1.5) + mono;
-      ctx.fillStyle = dim;
-      ctx.textAlign = 'left';
-      ctx.fillText('KEYS', gx, gy - padT + 7);      // clear above the rotated labels
-      ctx.save();
-      ctx.translate(gx - padL * 0.88, gy + cell * N * 0.5);
-      ctx.rotate(-Math.PI / 2);
-      ctx.textAlign = 'center';
-      ctx.fillText('QUERIES', 0, 0);
-      ctx.restore();
-
-      /* --- labels --- */
-      ctx.font = '400 ' + labelSize + mono;
-
-      for (var k = 0; k < N; k++) {
-        // rows, right-aligned into the left margin
-        ctx.textAlign = 'right';
-        ctx.fillStyle = (k === hoverI) ? accent : dim;
-        ctx.fillText(TOKENS[k], gx - 8, gy + cell * (k + 0.5));
-
-        // columns, rotated, the way a real attention plot is labelled
-        ctx.save();
-        ctx.translate(gx + cell * (k + 0.5), gy - 8);
-        ctx.rotate(-Math.PI / 2);
-        ctx.textAlign = 'left';
-        ctx.fillStyle = (k === hoverJ) ? accent : dim;
-        ctx.fillText(TOKENS[k], 0, 0);
-        ctx.restore();
-      }
-
-      /* --- crosshair on the hovered cell --- */
-      if (hoverI >= 0 && hoverJ >= 0) {
-        ctx.fillStyle = accent;
-        ctx.globalAlpha = 0.07;
-        ctx.fillRect(gx, gy + cell * hoverI, cell * N, cell);
-        ctx.fillRect(gx + cell * hoverJ, gy, cell, cell * N);
-        ctx.globalAlpha = 1;
-      }
-
-      /* --- the matrix --- */
-      var maxR = cell * 0.44;              // never let neighbours touch
-      for (var i = 0; i < N; i++) {
-        var w = rowWeights(i, t);
-        for (var j = 0; j <= i; j++) {
-          var cx = gx + cell * (j + 0.5);
-          var cy = gy + cell * (i + 0.5);
-          var rad = Math.sqrt(w[j]) * maxR * 1.25;
-          if (rad > maxR) rad = maxR;
-          if (rad < 0.35) continue;
-
-          var on = (i === hoverI && j === hoverJ);
-          ctx.fillStyle = on ? accent : ink;
-          ctx.globalAlpha = on ? 1 : 0.26 + w[j] * 0.9;
-          ctx.beginPath();
-          ctx.arc(cx, cy, on ? rad * 1.25 : rad, 0, 6.2832);
-          ctx.fill();
-        }
-      }
-      ctx.globalAlpha = 1;
-
-      /* --- readout lives in the figcaption: real text, selectable and
-         reachable by a screen reader, rather than pixels on a canvas --- */
-      if (readout) {
-        readout.textContent = (hoverI >= 0 && hoverJ >= 0)
-          ? TOKENS[hoverI] + ' → ' + TOKENS[hoverJ] + '  ' + rowWeights(hoverI, t)[hoverJ].toFixed(2)
-          : 'Hover a cell to inspect a pair';
-      }
-    }
-
-    /* --- pointer: bound in EVERY case ---------------------------------
-       Reduced motion means no unsolicited animation. It does not mean
-       the reader loses the ability to interact, and gating the pointer
-       behind it was a bug: with Windows animation effects switched off,
-       the whole thing became inert. */
-    function locate(e) {
-      var r = fig.getBoundingClientRect();
-      var x = e.clientX - r.left, y = e.clientY - r.top;
-      var j = Math.floor((x - gx) / cell);
-      var i = Math.floor((y - gy) / cell);
-      if (i >= 0 && i < N && j >= 0 && j < N && j <= i) { hoverI = i; hoverJ = j; }
-      else { hoverI = hoverJ = -1; }
-    }
-
-    function onMove(e) {
-      var pi = hoverI, pj = hoverJ;
-      locate(e);
-      if (reduced && (pi !== hoverI || pj !== hoverJ)) draw(0);
-    }
-    function onLeave() {
-      hoverI = hoverJ = -1;
-      if (reduced) draw(0);
-    }
-
-    fig.addEventListener('pointermove', onMove);
-    fig.addEventListener('mousemove', onMove);      // older browsers
-    fig.addEventListener('pointerleave', onLeave);
-    fig.addEventListener('mouseleave', onLeave);
-
-    /* --- run loop, only when it can be seen --- */
-    var raf = null, onScreen = true, visible = true, t0 = 0;
-
-    function frame(ts) {
-      if (!t0) t0 = ts;
-      draw(ts - t0);
-      raf = requestAnimationFrame(frame);
-    }
-    function start() { if (raf === null && onScreen && visible && !reduced) raf = requestAnimationFrame(frame); }
-    function stop() { if (raf !== null) { cancelAnimationFrame(raf); raf = null; } }
-
-    resize();
-    draw(0);
-
-    if (!reduced) {
-      document.addEventListener('visibilitychange', function () {
-        visible = !document.hidden;
-        visible ? start() : stop();
+    CORPUS.forEach(function (d) {
+      var toks = tokenise(d.t + ' ' + d.x + ' ' + d.s);
+      var tf = {}, seen = {};
+      toks.forEach(function (w) {
+        tf[w] = (tf[w] || 0) + 1;
+        if (!seen[w]) { seen[w] = 1; df[w] = (df[w] || 0) + 1; }
       });
-      if ('IntersectionObserver' in window) {
-        new IntersectionObserver(function (entries) {
-          onScreen = entries[0].isIntersecting;
-          onScreen ? start() : stop();
-        }, { threshold: 0.01 }).observe(fig);
-      }
-      start();
+      docs.push({ d: d, tf: tf, dl: toks.length });
+      avgdl += toks.length;
+    });
+    avgdl = avgdl / N || 1;
+
+    var K1 = 1.5, B = 0.75;
+
+    function search(q) {
+      var terms = tokenise(q);
+      if (!terms.length) return { terms: [], hits: [] };
+
+      var scored = docs.map(function (doc) {
+        var score = 0;
+        terms.forEach(function (w) {
+          var f = doc.tf[w];
+          if (!f) return;
+          var n = df[w] || 0;
+          var idf = Math.log(1 + (N - n + 0.5) / (n + 0.5));
+          score += idf * (f * (K1 + 1)) / (f + K1 * (1 - B + B * doc.dl / avgdl));
+        });
+        return { doc: doc.d, score: score };
+      });
+
+      scored = scored.filter(function (r) { return r.score > 0; })
+                     .sort(function (a, b) { return b.score - a.score; })
+                     .slice(0, 4);
+      return { terms: terms, hits: scored };
     }
 
-    function refresh() { resize(); draw(0); }
-    if ('ResizeObserver' in window) new ResizeObserver(refresh).observe(fig);
-    else window.addEventListener('resize', refresh);
+    /* ---- rendering ---- */
+    function esc(s) {
+      return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
 
-    var tgl = document.getElementById('themeToggle');
-    if (tgl) tgl.addEventListener('click', function () { setTimeout(function () { draw(0); }, 60); });
+    function highlight(text, terms) {
+      var set = {};
+      terms.forEach(function (t) { set[t] = 1; });
+      return esc(text).replace(/[A-Za-z0-9+#]+/g, function (word) {
+        return set[stem(word.toLowerCase())] ? '<mark>' + word + '</mark>' : word;
+      });
+    }
+
+    function render(q) {
+      var res = search(q);
+
+      if (!res.terms.length) {
+        results.innerHTML = '<p class="ask-empty">Type a term, or pick one above.</p>';
+        return;
+      }
+      if (!res.hits.length) {
+        results.innerHTML = '<p class="ask-empty">No passage matches &ldquo;' + esc(q) + '&rdquo;.</p>';
+        return;
+      }
+
+      var top = res.hits[0].score || 1;
+      results.innerHTML = res.hits.map(function (h) {
+        var pct = Math.max(6, Math.round((h.score / top) * 100));
+        return '<a class="hit" href="' + h.doc.a + '">'
+             +   '<p class="hit-meta">' + esc(h.doc.s) + ' &#183; <b>' + esc(h.doc.t) + '</b>'
+             +     '<span class="hit-score">' + h.score.toFixed(2) + '</span></p>'
+             +   '<div class="hit-bar"><i style="width:' + pct + '%"></i></div>'
+             +   '<p class="hit-text">' + highlight(h.doc.x, res.terms) + '</p>'
+             + '</a>';
+      }).join('');
+    }
+
+    /* ---- wiring ---- */
+    var timer = null;
+    input.addEventListener('input', function () {
+      clearTimeout(timer);
+      timer = setTimeout(function () { render(input.value); }, 90);
+    });
+
+    $$('.ask-chips button').forEach(function (b) {
+      b.addEventListener('click', function () {
+        input.value = b.getAttribute('data-q');
+        render(input.value);
+        input.focus();
+      });
+    });
+
+    // arrive with it already working, so nobody has to guess what it does
+    render('agentic AI multi-agent');
   })();
 
-  /* ---------- 9. ANCHORS ---------- */
+  /* ---------- 8. ANCHORS ---------- */
   $$('a[href^="#"]').forEach(function (a) {
     a.addEventListener('click', function (e) {
       var id = a.getAttribute('href');

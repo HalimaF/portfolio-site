@@ -77,7 +77,7 @@ follows:
 ```css
 --paper:  #F4F1EA;   /* warm stock, not white */
 --ink:    #16150F;   /* near-black, warm      */
---accent: #1B4079;   /* deep ink blue         */
+--accent: #1C5B45;   /* deep green            */
 --rule:   #DAD3C2;   /* hairline              */
 ```
 
@@ -103,30 +103,39 @@ up.
 
 ---
 
-## The attention matrix
+## Ask my CV — the retrieval engine
 
-The hero carries the square grid a transformer produces when every token
-scores every earlier token. Rows are queries, columns are keys, and **dot size
-is the weight** — so the value is carried by size rather than a heat ramp, and
-there is no gradient anywhere in it. It is causal, so nothing attends forward;
-that is why it is a triangle.
+The hero is not a graphic. It is a working search engine over the resume
+further down the page.
 
-**Hover any cell** and it reads out the pair — `then → request 0.20` — in the
-caption, the way you would inspect a real attention head. The hovered row and
-column light up as a crosshair.
+Type a term and it runs **BM25** — the standard lexical ranking function used
+by Lucene and Elasticsearch — over the CV passages, and returns the ones that
+actually match, ranked, scored, with the matched words highlighted and a link
+to the section they came from.
 
-The weights are **illustrative, not measured**, and the caption says so on the
-page. They come from a deterministic function shaped like real decoder
-attention — strong diagonal, a sink on the first token, recency decay — so it
-looks like the real thing without pretending to be an experimental result.
+**It is deliberately not a chatbot.** It has no model and no server. It cannot
+answer in sentences, and it cannot invent anything: every word it displays is a
+word already written further down the page. On a portfolio where nothing else
+is fabricated, a hallucinating chat box would be the one dishonest thing on it.
 
-The hover works even under `prefers-reduced-motion`. Reduced motion suppresses
-the unsolicited drift, not your ability to interact: an earlier version gated
-the pointer listeners behind that check, and on a machine with Windows
-animation effects switched off the whole thing was inert.
+It arrives already showing results, so nobody has to guess what the box does.
 
-To change it: `TOKENS` at the top of section 8 in `app.js` is the sentence, and
-`rawWeight()` is the shape of the attention pattern.
+**The corpus is the only thing to edit.** `CORPUS` at the top of section 7 in
+`app.js` is a flat array:
+
+```js
+{ s: 'Experience', t: 'AI Intern, Systems Limited', a: '#experience',
+  x: 'Built agentic AI workflows for an enterprise client using LangChain...' }
+```
+
+`s` is the section label, `t` the title, `a` the anchor it links to, `x` the
+searchable text. Add an entry and it is indexed on the next load — the index
+rebuilds itself.
+
+`K1` and `B` just below it are the BM25 parameters (term-frequency saturation
+and length normalisation). The defaults, 1.5 and 0.75, are the standard ones.
+
+## Motion
 
 ## Motion
 
@@ -147,8 +156,10 @@ That is a real skip, not a slowdown.
 - No horizontal overflow at 320 / 360 / 390 / 430 / 768 / 1024 / 1280 / 1440 /
   1920px, measured as `documentElement.scrollWidth === clientWidth`
 - Both themes, including the plate inverting with the ink token
-- Hover confirmed working with `prefers-reduced-motion: reduce` active:
-  canvas repaints and the caption reads out the hovered pair
+- Retrieval verified end to end: every preset query returns a correctly
+  ranked result set (`FastAPI` surfaces the backend work, `document AI`
+  surfaces FinAgent Pro), terms are highlighted, and each hit links to its
+  section
 - Keyboard navigable: skip link, focus-visible rings, anchors move focus to the
   section they point at
 - Prints cleanly — the masthead and drawer drop out
