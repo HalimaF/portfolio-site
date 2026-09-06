@@ -242,6 +242,23 @@ a{ color:inherit; text-decoration:none; }
 }
 .ask-chips button:hover{ border-color:var(--accent); color:var(--accent); }
 
+/* the retrieval space — its own band, so nothing is ever drawn under text */
+.space{
+  margin-top:16px;
+  padding-top:12px;
+  border-top:1px solid var(--rule);
+}
+.space canvas{
+  display:block;
+  width:100%;
+  height:168px;
+}
+.space-cap{
+  margin:2px 0 0;
+  font-family:var(--mono); font-size:9.5px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--ink-3);
+}
+
 .ask-results{ margin-top:16px; flex:1; }
 
 .hit{
@@ -575,6 +592,10 @@ a{ color:inherit; text-decoration:none; }
 .reveal.in{ opacity:1; transform:none; }
 
 /* ---------- 10. RESPONSIVE ---------- */
+@media (max-width:767px){
+  .space{ display:none; }
+}
+
 @media (max-width:1000px){
   .masthead-nav{ display:none; }
   .menu-toggle{ display:inline-block; }

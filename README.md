@@ -7,7 +7,8 @@ Three files do all of it.
 |---|---|
 | `index.html` | Every word on the page |
 | `styles.css` | The whole visual system; tokens are at the top |
-| `app.js` | Theme, reveals, counters, nav state, drawer, anchors |
+| `app.js` | Theme, reveals, counters, nav state, drawer, anchors, BM25 retrieval |
+| `hero3d.js` | The retrieval space in the hero (self-contained, deletable) |
 | `Halima_Fahim_CV.pdf` | Linked from the hero and the contact section |
 | `serve.py` | Local preview server (not part of the deployed site) |
 
@@ -141,6 +142,34 @@ rebuilds itself.
 
 `K1` and `B` just below it are the BM25 parameters (term-frequency saturation
 and length normalisation). The defaults, 1.5 and 0.75, are the standard ones.
+
+---
+
+## The retrieval space
+
+Under the search box, every passage in the CV is a point in 3D. They sit in
+five clusters, one per section, so the space is legible before you type. Run a
+query and matching passages advance toward the camera and brighten in
+proportion to their BM25 score; the rest recede and dim. The top hit is named.
+
+It shows the **whole** corpus, not just the four passages the list has room
+for. That is the only thing the picture can tell you that the list cannot, and
+the only reason it earns its place.
+
+It computes nothing. `app.js` dispatches a `cv:ranked` CustomEvent carrying the
+full ranking, and `hero3d.js` listens. The BM25 code is untouched.
+
+**No library.** The 3D is a rotation, a perspective divide and a depth sort.
+Vendoring three.js to draw twenty circles would have cost 670,681 bytes — 57x
+the entire feature and 13x the whole site.
+
+**To remove it:** delete `hero3d.js`, its `<script>` tag, and the
+`<div class="space">` block in `index.html`. Verified: with those gone the hero
+is exactly what it was, with no console errors.
+
+It does not render below 768px, and it removes itself if the 2D canvas context
+is unavailable. Under `prefers-reduced-motion` it draws a static frame and
+starts no animation loop.
 
 ---
 

@@ -101,6 +101,11 @@
         <button type="button" data-q="pandas data pipeline">data</button>
       </p>
 
+      <div class="space">
+        <canvas id="askSpace" aria-hidden="true"></canvas>
+        <p class="space-cap"><span id="spaceCap">20 passages indexed</span></p>
+      </div>
+
       <div class="ask-results" id="askResults" aria-live="polite"></div>
 
       <p class="ask-note" id="askNote">
@@ -322,6 +327,9 @@
   </div>
 </footer>
 
+<!-- hero3d first: app.js dispatches its first cv:ranked during parse,
+     so the listener has to be registered before app.js runs -->
+<script src="hero3d.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

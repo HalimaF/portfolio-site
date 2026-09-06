@@ -251,9 +251,8 @@
       });
 
       scored = scored.filter(function (r) { return r.score > 0; })
-                     .sort(function (a, b) { return b.score - a.score; })
-                     .slice(0, 4);
-      return { terms: terms, hits: scored };
+                     .sort(function (a, b) { return b.score - a.score; });
+      return { terms: terms, hits: scored.slice(0, 4), all: scored };
     }
 
     /* ---- rendering ---- */
@@ -271,6 +270,11 @@
 
     function render(q) {
       var res = search(q);
+
+      // additive: publish the ranking. Nothing downstream of this reads it back.
+      document.dispatchEvent(new CustomEvent('cv:ranked', {
+        detail: { query: q, terms: res.terms, all: res.all || [], corpus: CORPUS }
+      }));
 
       if (!res.terms.length) {
         results.innerHTML = '<p class="ask-empty">Type a term, or pick one above.</p>';
