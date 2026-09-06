@@ -142,7 +142,7 @@ rebuilds itself.
 `K1` and `B` just below it are the BM25 parameters (term-frequency saturation
 and length normalisation). The defaults, 1.5 and 0.75, are the standard ones.
 
-## Motion
+---
 
 ## Motion
 
@@ -162,7 +162,7 @@ That is a real skip, not a slowdown.
 
 - No horizontal overflow at 320 / 360 / 390 / 430 / 768 / 1024 / 1280 / 1440 /
   1920px, measured as `documentElement.scrollWidth === clientWidth`
-- Both themes, including the plate inverting with the ink token
+- Both themes, paper and night
 - Retrieval verified end to end: every preset query returns a correctly
   ranked result set (`FastAPI` surfaces the backend work, `document AI`
   surfaces FinAgent Pro), terms are highlighted, and each hit links to its
