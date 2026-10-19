@@ -13,3 +13,7 @@ _archive/
 
 # local preview server, not part of the deployed site
 serve.py
+
+# build output and Netlify CLI state
+dist/
+.netlify/

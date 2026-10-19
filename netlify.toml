@@ -1,0 +1,5 @@
+# Static site, no framework. The build only copies the public files into dist/
+# so the local-only folders (_archive, .impeccable, serve.py) never get deployed.
+[build]
+  command = "node -e \"const fs=require('fs');fs.mkdirSync('dist',{recursive:true});for(const f of ['index.html','styles.css','app.js','hero3d.js','Halima_Fahim_CV.pdf'])fs.copyFileSync(f,'dist/'+f)\""
+  publish = "dist"
