@@ -52,6 +52,11 @@ typography:
     fontWeight: 600
     lineHeight: 1.35
     letterSpacing: "-0.01em"
+  role:
+    fontFamily: "Schibsted Grotesk, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "1.2rem"
+    fontWeight: 500
+    letterSpacing: "-0.01em"
   body:
     fontFamily: "Schibsted Grotesk, ui-sans-serif, system-ui, sans-serif"
     fontSize: "16px"
@@ -62,6 +67,11 @@ typography:
     fontSize: "15px"
     fontWeight: 400
     lineHeight: 1.65
+  caption:
+    fontFamily: "Schibsted Grotesk, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "14px"
+    fontWeight: 400
+    lineHeight: 1.5
   label:
     fontFamily: "Schibsted Grotesk, ui-sans-serif, system-ui, sans-serif"
     fontSize: "13px"
@@ -74,6 +84,7 @@ typography:
     letterSpacing: "0.01em"
     fontFeature: "tnum"
 rounded:
+  xs: "6px"
   sm: "8px"
   md: "10px"
   lg: "14px"
