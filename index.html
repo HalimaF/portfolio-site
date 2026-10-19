@@ -1,400 +1,391 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="paper">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Halima Fahim | Full-Stack and AI Developer</title>
-<meta name="description" content="Halima Fahim, Full-Stack and AI Developer in Lahore. Web platforms, mobile apps and agentic AI systems with React, TypeScript, Flutter, Python, FastAPI and Node.js.">
+<meta name="description" content="Halima Fahim, Full-Stack and AI Developer in Lahore. Web platforms, mobile apps and agentic AI systems with React, TypeScript, Flutter, Python, FastAPI and Node.js. Open to remote roles.">
 <meta name="author" content="Halima Fahim">
+<meta name="color-scheme" content="light dark">
 
 <meta property="og:type" content="website">
 <meta property="og:title" content="Halima Fahim | Full-Stack and AI Developer">
-<meta property="og:description" content="Web platforms, mobile apps and agentic AI systems. React, TypeScript, Flutter, Python, FastAPI, Node.js.">
+<meta property="og:description" content="I build and ship complete products: web platforms, mobile apps and agentic AI systems.">
+<meta property="og:url" content="https://portfoliohalima.netlify.app/">
+<meta property="og:image" content="https://portfoliohalima.netlify.app/assets/halima.jpg">
+<meta name="twitter:card" content="summary">
 
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23C2410C'/%3E%3Ctext x='16' y='22' font-family='Arial' font-weight='700' font-size='15' text-anchor='middle' fill='white'%3EHF%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;1,400;1,500&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
+<script>
+  // set the theme before first paint so there is no flash
+  try {
+    var t = localStorage.getItem('hf-theme');
+    if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+  } catch (e) {}
+</script>
 </head>
 <body>
+<!--
+  THESIS: a hiring page, not a showcase. The category's proven split layout (identity and
+  contact pinned left, evidence scrolling right) so a recruiter gets role, availability,
+  proof and contact in ten seconds. Refuses stats bands, eyebrows and section numbers.
+  OWN-WORLD: cool white or near-black ground, ink text, one burnt orange taken from her
+  headshot for actions and links. Schibsted Grotesk throughout, tabular numerals for dates.
+  STORY: who she is, that she ships to production, what she built, how to hire her.
+  FIRST VIEWPORT: left: photo, name, role, one-line pitch, open-to-work status, Email
+  and CV buttons, section nav, socials. Right: About, then the first experience entry.
+  FORM: canon (user-pinned: "analyze portfolios of top tech people"), no roll, no seed key.
+  FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
+-->
 
-<a class="skip-link" href="#main">Skip to content</a>
+<a class="skip" href="#main">Skip to content</a>
 
-<!-- ===================== MASTHEAD ===================== -->
-<header class="masthead" id="masthead">
-  <div class="wrap masthead-inner">
-    <a class="brand" href="#top">Halima&nbsp;Fahim</a>
-
-    <nav class="masthead-nav" aria-label="Sections">
-      <a href="#about">About</a>
-      <a href="#skills">Toolkit</a>
-      <a href="#experience">Experience</a>
-      <a href="#work">Work</a>
-      <a href="#education">Education</a>
-      <a href="#contact">Contact</a>
-    </nav>
-
-    <div class="masthead-end">
-      <button class="mode" id="themeToggle" aria-label="Switch colour theme" title="Switch theme">
-        <span class="mode-swatch" aria-hidden="true"></span>
-        <span class="mode-label" id="modeLabel">Paper</span>
-      </button>
-      <button class="menu-toggle" id="menuBtn" aria-label="Open menu" aria-expanded="false">Menu</button>
-    </div>
+<!-- mobile-only bar: name and the one action that matters, always in reach -->
+<header class="mbar" id="mbar">
+  <a class="mbar-name" href="#top">
+    <img src="assets/halima.jpg" alt="" width="28" height="28">
+    Halima Fahim
+  </a>
+  <div class="mbar-end">
+    <button class="theme" type="button" data-theme-toggle aria-label="Switch to dark theme">
+      <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
+    </button>
+    <a class="btn btn-primary btn-sm" href="mailto:halima1939531@gmail.com">Hire me</a>
   </div>
 </header>
 
-<nav class="drawer" id="mobileMenu" aria-label="Sections" hidden>
-  <a href="#about"><span class="num">01</span>About</a>
-  <a href="#skills"><span class="num">02</span>Toolkit</a>
-  <a href="#experience"><span class="num">03</span>Experience</a>
-  <a href="#work"><span class="num">04</span>Work</a>
-  <a href="#education"><span class="num">05</span>Education</a>
-  <a href="#contact"><span class="num">06</span>Contact</a>
-</nav>
+<div class="shell" id="top">
 
-<main id="main">
+  <!-- ===================== IDENTITY (sticky on desktop) ===================== -->
+  <header class="side">
+    <div class="side-top">
+      <img class="avatar" src="assets/halima.jpg" alt="Halima Fahim" width="96" height="96">
 
-<!-- ===================== HERO ===================== -->
-<section class="hero" id="top">
-  <div class="wrap hero-grid">
-    <div class="hero-lead">
-      <p class="kicker reveal">Full-Stack and AI Developer <span class="sep">|</span> Web, Mobile &amp; Agentic AI</p>
+      <h1 class="name">Halima Fahim</h1>
+      <p class="role">Full-Stack and AI Developer</p>
+      <p class="pitch">I build and ship complete products: web platforms, mobile apps and agentic AI systems.</p>
 
-      <h1 class="display reveal" data-delay="1">Halima<br><em>Fahim</em></h1>
+      <p class="status"><span class="dot" aria-hidden="true"></span>Open to remote roles worldwide <span class="muted">· Lahore, UTC+5</span></p>
 
-      <p class="standfirst reveal" data-delay="2">
-        Final-year Computer Science student who builds and ships complete products:
-        web platforms, mobile apps and agentic AI systems. I work across React,
-        TypeScript, Flutter, Python, FastAPI and Node.js.
-      </p>
+      <div class="ctas">
+        <a class="btn btn-primary" href="mailto:halima1939531@gmail.com">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+          Email me
+        </a>
+        <a class="btn" href="Halima_Fahim_CV.pdf" download>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>
+          Download CV
+        </a>
+      </div>
 
-      <p class="actions reveal" data-delay="3">
-        <a class="action action-strong" href="#work">View the work</a>
-        <a class="action" href="Halima_Fahim_CV.pdf" download>Download CV</a>
-        <a class="action" href="mailto:halima1939531@gmail.com">Email me</a>
-      </p>
+      <nav class="toc" aria-label="Sections">
+        <a href="#about">About</a>
+        <a href="#experience">Experience</a>
+        <a href="#projects">Projects</a>
+        <a href="#skills">Skills</a>
+        <a href="#education">Education</a>
+        <a href="#contact">Contact</a>
+      </nav>
     </div>
 
-    <div class="ask reveal" data-delay="2">
-      <div class="ask-head">
-        <label for="askInput">Ask my CV</label>
-        <span class="ask-engine">BM25 &#183; in your browser</span>
-      </div>
-
-      <p class="ask-why">
-        Screening for something specific? Type it. This searches my real
-        experience below and shows you the passages that match, ranked.
-      </p>
-
-      <div class="ask-field">
-        <input id="askInput" type="search" autocomplete="off" spellcheck="false"
-               placeholder="try: FastAPI &#183; Flutter &#183; multi-agent"
-               aria-describedby="askNote">
-      </div>
-
-      <p class="ask-chips">
-        <button type="button" data-q="agentic AI multi-agent">agentic AI</button>
-        <button type="button" data-q="FastAPI backend API">FastAPI</button>
-        <button type="button" data-q="React TypeScript Next.js">React</button>
-        <button type="button" data-q="Flutter mobile app">Flutter</button>
-        <button type="button" data-q="Odoo inventory forecasting">Odoo</button>
-      </p>
-
-      <div class="space">
-        <canvas id="askSpace" aria-hidden="true"></canvas>
-        <p class="space-cap"><span id="spaceCap">27 passages indexed</span></p>
-      </div>
-
-      <div class="ask-results" id="askResults" aria-live="polite"></div>
-
-      <p class="ask-note" id="askNote">
-        Real ranked retrieval over the r&#233;sum&#233; below. No model, no server,
-        nothing invented.
-      </p>
+    <div class="side-foot">
+      <ul class="social" aria-label="Elsewhere">
+        <li><a href="https://github.com/HalimaF" target="_blank" rel="noopener" aria-label="GitHub">
+          <svg viewBox="0 0 24 24" aria-hidden="true" class="fill"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.5 9.5 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2z"/></svg>
+        </a></li>
+        <li><a href="https://www.linkedin.com/in/halima-fahim-82960b1b2/" target="_blank" rel="noopener" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24" aria-hidden="true" class="fill"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>
+        </a></li>
+        <li><a href="mailto:halima1939531@gmail.com" aria-label="Email">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+        </a></li>
+        <li><a href="tel:+923344615646" aria-label="Phone">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>
+        </a></li>
+      </ul>
+      <button class="theme theme-side" type="button" data-theme-toggle aria-label="Switch to dark theme">
+        <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
+      </button>
     </div>
-  </div>
+  </header>
 
-  <div class="wrap">
-    <dl class="colophon reveal" data-delay="4">
-      <div><dt>Based</dt><dd>Lahore, Pakistan &#183; UTC+5</dd></div>
-      <div><dt>Open to</dt><dd>Remote roles worldwide</dd></div>
-      <div><dt>Now</dt><dd>Co-founder at MartFlow, final year of BS Computer Science</dd></div>
-      <div><dt>Elsewhere</dt><dd><a href="https://github.com/HalimaF" target="_blank" rel="noopener">GitHub</a>, <a href="https://www.linkedin.com/in/halima-fahim-82960b1b2/" target="_blank" rel="noopener">LinkedIn</a></dd></div>
-    </dl>
-  </div>
-</section>
+  <!-- ===================== EVIDENCE ===================== -->
+  <main id="main" class="content">
 
-<!-- ===================== LEDGER ===================== -->
-<section class="ledger">
-  <div class="wrap ledger-grid">
-    <div class="ledger-item reveal"><b class="count" data-to="2">0</b><span>Internships completed</span></div>
-    <div class="ledger-item reveal" data-delay="1"><b class="count" data-to="15" data-suffix="+">0</b><span>Public repositories</span></div>
-    <div class="ledger-item reveal" data-delay="2"><b class="count" data-to="4">0</b><span>Leadership roles</span></div>
-    <div class="ledger-item reveal" data-delay="3"><b>2027</b><span>BS Computer Science, expected</span></div>
-  </div>
-</section>
-
-<!-- ===================== ABOUT ===================== -->
-<section class="chapter" id="about">
-  <div class="wrap">
-    <header class="chapter-head reveal"><span class="num">01</span><h2>About</h2></header>
-
-    <div class="prose-grid">
-      <p class="pull reveal">
-        I like owning the whole product: the database, the API, the screen, and the
-        agent in the middle.
-      </p>
-
-      <div class="prose reveal" data-delay="1">
+    <!-- ABOUT -->
+    <section id="about" class="sec" aria-labelledby="h-about">
+      <h2 id="h-about">About</h2>
+      <div class="prose">
         <p>
           I am a final-year Computer Science student at Kinnaird College for Women in
           Lahore. I build and ship complete products: web platforms, mobile apps and
-          agentic AI systems. My work runs across React, TypeScript, Flutter, Python,
-          Flask, FastAPI, Node.js and SQL, and I use AI coding tools like Claude Code,
-          Cursor and Copilot every day.
+          agentic AI systems. My work runs across <strong>React, TypeScript, Flutter,
+          Python, Flask, FastAPI, Node.js and SQL</strong>, and I use AI coding tools like
+          Claude Code, Cursor and Copilot every day.
         </p>
         <p>
-          This summer I was an AI intern at Systems Limited, building agentic workflows
-          that went into a live client system, with access controls so the agents could
-          only take safe, approved actions. I am also co-founder of MartFlow, a retail
-          commerce SaaS built on Odoo, and since 2021 I have freelanced with US clients
-          on Amazon operations, automating their reporting with Python.
+          This summer I was an AI intern at <strong>Systems Limited</strong>, building agentic
+          workflows that went into a live client system, with access controls so the
+          agents could only take safe, approved actions. I am also co-founder of
+          <strong>MartFlow</strong>, a retail commerce SaaS built on Odoo, and since 2021 I have
+          freelanced with US clients on Amazon operations, automating their reporting
+          with Python.
         </p>
       </div>
-    </div>
-  </div>
-</section>
 
-<!-- ===================== TOOLKIT ===================== -->
-<section class="chapter" id="skills">
-  <div class="wrap">
-    <header class="chapter-head reveal"><span class="num">02</span><h2>Toolkit</h2></header>
+    </section>
 
-    <dl class="specimen">
-      <div class="specimen-row reveal"><dt>Frontend</dt><dd>React, Next.js, TypeScript, JavaScript, HTML/CSS, Tailwind, MUI</dd></div>
-      <div class="specimen-row reveal"><dt>Mobile</dt><dd>Flutter, Dart, Firebase/Firestore, Provider</dd></div>
-      <div class="specimen-row reveal"><dt>Backend</dt><dd>Python, Flask, FastAPI, Node.js, Express, NestJS, SQLAlchemy, Prisma, REST APIs, JWT auth</dd></div>
-      <div class="specimen-row reveal"><dt>Data &amp; AI</dt><dd>LangChain, LangGraph, LLM APIs, Hugging Face Transformers, PyTorch, scikit-learn, Pandas, NumPy, OpenCV, YOLO</dd></div>
-      <div class="specimen-row reveal"><dt>Databases</dt><dd>PostgreSQL, MySQL, SQLite, Firestore</dd></div>
-      <div class="specimen-row reveal"><dt>Tools</dt><dd>Git/GitHub, Docker, CI, Render, Selenium, Playwright, Odoo (XML-RPC)</dd></div>
-    </dl>
-  </div>
-</section>
+    <!-- EXPERIENCE -->
+    <section id="experience" class="sec" aria-labelledby="h-exp">
+      <h2 id="h-exp">Experience</h2>
 
-<!-- ===================== EXPERIENCE ===================== -->
-<section class="chapter" id="experience">
-  <div class="wrap">
-    <header class="chapter-head reveal"><span class="num">03</span><h2>Experience</h2></header>
+      <ol class="list">
+        <li class="item">
+          <p class="when">Jun 2026 to Aug 2026</p>
+          <div class="what">
+            <h3>AI Intern <span class="org">· Systems Limited</span></h3>
+            <p class="where">Lahore, Pakistan</p>
+            <ul class="bullets">
+              <li>Built agentic AI workflows for an enterprise client with LangChain, LangGraph, FastAPI and SQLAlchemy, deployed in a live client system.</li>
+              <li>Designed multi-agent roles, tool access and orchestration.</li>
+              <li>Added access controls so agents could only take safe, approved actions.</li>
+            </ul>
+            <ul class="tags"><li>LangChain</li><li>LangGraph</li><li>FastAPI</li><li>SQLAlchemy</li></ul>
+          </div>
+        </li>
 
-    <ol class="record">
-      <li class="entry reveal">
-        <p class="entry-date">Jun 2026 to Aug 2026</p>
-        <div class="entry-body">
-          <h3>AI Intern <span class="at">Systems Limited</span></h3>
-          <p class="entry-place">Lahore, Pakistan</p>
-          <ul>
-            <li>Built agentic AI workflows for an enterprise client with LangChain, LangGraph, FastAPI and SQLAlchemy, deployed in a live client system.</li>
-            <li>Designed multi-agent roles, tool access and orchestration.</li>
-            <li>Added access controls so agents could only take safe, approved actions.</li>
-          </ul>
+        <li class="item">
+          <p class="when">2026 to present</p>
+          <div class="what">
+            <h3>Co-Founder, Product and Engineering <span class="org">· MartFlow</span></h3>
+            <p class="where">Retail commerce SaaS</p>
+            <ul class="bullets">
+              <li>Multi-tenant commerce platform integrated with Odoo ERP, with login, per-store catalogue and inventory, and an admin back office.</li>
+            </ul>
+            <ul class="tags"><li>Odoo ERP</li><li>Multi-tenant SaaS</li></ul>
+          </div>
+        </li>
+
+        <li class="item">
+          <p class="when">Aug 2025 to Oct 2025</p>
+          <div class="what">
+            <h3>Backend Development Intern <span class="org">· Dr Coders</span></h3>
+            <ul class="bullets">
+              <li>Built and maintained REST APIs.</li>
+              <li>Agreed API contracts with frontend developers and shipped features to production.</li>
+            </ul>
+            <ul class="tags"><li>REST APIs</li></ul>
+          </div>
+        </li>
+
+        <li class="item">
+          <p class="when">2021 to present</p>
+          <div class="what">
+            <h3>Amazon Operations and Integrations <span class="org">· Freelance</span></h3>
+            <p class="where">Remote</p>
+            <ul class="bullets">
+              <li>Work with US clients on their Amazon operations.</li>
+              <li>Automate reporting with Python and Amazon's Selling Partner API.</li>
+            </ul>
+            <ul class="tags"><li>Python</li><li>Selling Partner API</li></ul>
+          </div>
+        </li>
+      </ol>
+
+      <a class="more" href="Halima_Fahim_CV.pdf" download>Download full CV
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>
+      </a>
+    </section>
+
+    <!-- PROJECTS
+         To add a screenshot: put the image in assets/projects/ and uncomment the
+         <img class="shot"> line inside that project. Nothing else changes. -->
+    <section id="projects" class="sec" aria-labelledby="h-proj">
+      <h2 id="h-proj">Projects</h2>
+
+      <ol class="list">
+        <li class="item project">
+          <!-- <img class="shot" src="assets/projects/point-eight.jpg" alt="Point Eight inventory dashboard" loading="lazy"> -->
+          <div class="what">
+            <h3>Point Eight</h3>
+            <p class="sub">Odoo operations app, the live system behind MartFlow's Qatar retailer</p>
+            <p>A Flask app on top of Odoo via XML-RPC, with 130 routes across the main app and 3 blueprints. Inventory dashboards, demand forecasting (Holt-Winters plus a combined model), stock sync to the Snoonu and Talabat delivery marketplaces, purchase orders, cash-outs, payroll, and an AI-written daily sales summary using Gemini or OpenAI.</p>
+            <ul class="badges"><li class="live">Live in production</li><li>Private</li></ul>
+            <ul class="tags"><li>Python</li><li>Flask</li><li>Odoo</li><li>SQLite</li><li>Playwright</li><li>Selenium</li></ul>
+          </div>
+        </li>
+
+        <li class="item project">
+          <!-- <img class="shot" src="assets/projects/rentify.jpg" alt="Rentify listings page" loading="lazy"> -->
+          <div class="what">
+            <h3>Rentify</h3>
+            <p class="sub">Rental platform for Pakistan</p>
+            <p>The web app is React 18 and Vite with MUI and Tailwind. The API runs on Node 20 and Express with PostgreSQL via Prisma, JWT auth, Zod validation and interactive API docs. Rule-based fraud scoring with an optional Python ML service, and separate roles for tenants and students, owners and admins.</p>
+            <ul class="badges"><li class="live">Deployed on Render</li><li>11 test files</li><li>Private</li></ul>
+            <ul class="tags"><li>React</li><li>Vite</li><li>MUI</li><li>Tailwind</li><li>Node.js</li><li>Express</li><li>PostgreSQL</li><li>Prisma</li><li>Docker</li></ul>
+          </div>
+        </li>
+
+        <li class="item project">
+          <!-- <img class="shot" src="assets/projects/invoiceflow.jpg" alt="InvoiceFlow decision log" loading="lazy"> -->
+          <div class="what">
+            <h3><a class="stretch" href="https://github.com/HalimaF/Invoiceflow" target="_blank" rel="noopener">InvoiceFlow<svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a></h3>
+            <p class="sub">Agentic accounts-payable automation</p>
+            <p>A state-machine orchestrator runs five agents: Intake, Validation, Matching, Approval and Vendor-query. LLM output is checked against a strict schema and self-corrects up to 3 times. It catches duplicate invoices and bank-account-change fraud, does 2-way PO matching, and logs every decision with its confidence and reasoning.</p>
+            <ul class="badges"><li>Public repo</li></ul>
+            <ul class="tags"><li>Python</li><li>LLM APIs</li><li>Multi-agent</li></ul>
+          </div>
+        </li>
+
+        <li class="item project">
+          <!-- <img class="shot" src="assets/projects/shetrack.jpg" alt="SheTrack+ cycle tracking screen" loading="lazy"> -->
+          <div class="what">
+            <h3>SheTrack+</h3>
+            <p class="sub">Women's health app</p>
+            <p>Cycle, symptom, mood and hydration tracking, plus journaling and phase-aware guidance. A clean <code>flutter analyze</code> and CI on every change.</p>
+            <ul class="badges"><li>104 automated tests</li><li>Private</li></ul>
+            <ul class="tags"><li>Flutter</li><li>Dart</li><li>Provider</li><li>Firebase</li><li>Firestore</li><li>Cloud Functions</li></ul>
+          </div>
+        </li>
+
+        <li class="item project">
+          <!-- <img class="shot" src="assets/projects/repo-radar.jpg" alt="Repo Radar side panel" loading="lazy"> -->
+          <div class="what">
+            <h3><a class="stretch" href="https://github.com/HalimaF/Repo-Radar" target="_blank" rel="noopener">Repo Radar<svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a></h3>
+            <p class="sub">Chrome extension</p>
+            <p>A side panel that grades any GitHub repo from 0 to 100 on activity, bus factor, hygiene and CI, checks dependency vulnerabilities against OSV.dev, and draws the repo's real import graph as a zoomable diagram. No LLM, no runtime npm dependencies.</p>
+            <ul class="badges"><li>Public repo</li><li>CI</li></ul>
+            <ul class="tags"><li>JavaScript</li><li>Chrome extension</li><li>OSV.dev</li></ul>
+          </div>
+        </li>
+
+        <li class="item project">
+          <!-- <img class="shot" src="assets/projects/dil-e-azaad.jpg" alt="Dil-e-Azaad chat screen" loading="lazy"> -->
+          <div class="what">
+            <h3><a class="stretch" href="https://github.com/HalimaF/Mental-Health-chatbot" target="_blank" rel="noopener">Dil-e-Azaad<svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a></h3>
+            <p class="sub">Mental health companion</p>
+            <p>A Flask app using Hugging Face models. Every message goes through two-layer crisis detection, rules plus a classifier. Messages are Fernet-encrypted at rest and the conversation keeps a rolling summary.</p>
+            <ul class="badges"><li>Public repo</li><li>13 test files</li><li>Docker and Render</li></ul>
+            <ul class="tags"><li>Python</li><li>Flask</li><li>Hugging Face</li><li>Docker</li></ul>
+          </div>
+        </li>
+
+        <li class="item project">
+          <!-- <img class="shot" src="assets/projects/brandscan.jpg" alt="brandscan CLI output" loading="lazy"> -->
+          <div class="what">
+            <h3>brandscan</h3>
+            <p class="sub">Amazon FBA wholesale screener</p>
+            <p>A Python CLI that screens a brand's catalogue through the Keepa API and works out the maximum unit cost that still meets a profit target. Built to stay inside a rate limit of 5 tokens per minute.</p>
+            <ul class="badges"><li>15 test files</li><li>Private</li></ul>
+            <ul class="tags"><li>Python</li><li>Keepa API</li></ul>
+          </div>
+        </li>
+      </ol>
+
+      <h3 class="h-sub">More projects</h3>
+      <table class="archive">
+        <thead><tr><th scope="col">Project</th><th scope="col">Built with</th><th scope="col"><span class="vh">Link</span></th></tr></thead>
+        <tbody>
+          <tr><th scope="row">FinAgent Pro<span class="note">IBM watsonx Orchestrate Agentic AI Hackathon 2025, 5 orchestrated skills, webhooks</span></th><td>FastAPI, multi-agent</td><td><a href="https://github.com/HalimaF/FinAgentPro" target="_blank" rel="noopener" aria-label="FinAgent Pro on GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a></td></tr>
+          <tr><th scope="row">Smart Resume Analyzer<span class="note">ATS scoring from 0 to 100, PDF report export</span></th><td>Flask, PyMuPDF, EasyOCR</td><td><a href="https://github.com/HalimaF/Resume-Anlyzer-Maker" target="_blank" rel="noopener" aria-label="Smart Resume Analyzer on GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a></td></tr>
+          <tr><th scope="row">Flight booking site</th><td>Next.js 15, TypeScript, Tailwind, Radix UI</td><td></td></tr>
+          <tr><th scope="row">GameMart<span class="note">socket.io chat, buyer, seller and admin roles</span></th><td>React, Vite, MUI, Express</td><td><a href="https://github.com/HalimaF/GameMart" target="_blank" rel="noopener" aria-label="GameMart on GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a></td></tr>
+          <tr><th scope="row">NestJS Products API</th><td>NestJS, TypeORM, MySQL, class-validator, bcrypt</td><td></td></tr>
+          <tr><th scope="row">Craftora<span class="note">DIY community app with posts, likes, follows and community chat</span></th><td>Flutter</td><td></td></tr>
+          <tr><th scope="row">Road Safety Detection<span class="note">Custom annotated dataset, trained and fine-tuned YOLO models</span></th><td>Python, OpenCV, PyTorch</td><td></td></tr>
+          <tr><th scope="row">TenderX<span class="note">In progress. Final-year project, a multi-agent system for Pakistani government tenders. Clickable prototype so far.</span></th><td>Multi-agent</td><td></td></tr>
+        </tbody>
+      </table>
+
+      <a class="more" href="https://github.com/HalimaF" target="_blank" rel="noopener">All public code on GitHub
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg>
+      </a>
+    </section>
+
+    <!-- SKILLS -->
+    <section id="skills" class="sec" aria-labelledby="h-skills">
+      <h2 id="h-skills">Skills</h2>
+      <dl class="skills">
+        <div><dt>Frontend</dt><dd><ul class="tags"><li>React</li><li>Next.js</li><li>TypeScript</li><li>JavaScript</li><li>HTML/CSS</li><li>Tailwind</li><li>MUI</li></ul></dd></div>
+        <div><dt>Mobile</dt><dd><ul class="tags"><li>Flutter</li><li>Dart</li><li>Firebase/Firestore</li><li>Provider</li></ul></dd></div>
+        <div><dt>Backend</dt><dd><ul class="tags"><li>Python</li><li>Flask</li><li>FastAPI</li><li>Node.js</li><li>Express</li><li>NestJS</li><li>SQLAlchemy</li><li>Prisma</li><li>REST APIs</li><li>JWT auth</li></ul></dd></div>
+        <div><dt>Data and AI</dt><dd><ul class="tags"><li>LangChain</li><li>LangGraph</li><li>LLM APIs</li><li>Hugging Face Transformers</li><li>PyTorch</li><li>scikit-learn</li><li>Pandas</li><li>NumPy</li><li>OpenCV</li><li>YOLO</li></ul></dd></div>
+        <div><dt>Databases</dt><dd><ul class="tags"><li>PostgreSQL</li><li>MySQL</li><li>SQLite</li><li>Firestore</li></ul></dd></div>
+        <div><dt>Tools</dt><dd><ul class="tags"><li>Git/GitHub</li><li>Docker</li><li>CI</li><li>Render</li><li>Selenium</li><li>Playwright</li><li>Odoo (XML-RPC)</li></ul></dd></div>
+      </dl>
+
+      <!-- search over the CV text: BM25 in app.js, corpus is the CORPUS array -->
+      <div class="ask">
+        <label class="ask-label" for="askInput">Looking for something specific? Search my CV.</label>
+        <div class="ask-field">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg>
+          <input id="askInput" type="search" autocomplete="off" spellcheck="false" placeholder="FastAPI, Flutter, fraud detection..." aria-describedby="askNote">
         </div>
-      </li>
-
-      <li class="entry reveal">
-        <p class="entry-date">2026 to present</p>
-        <div class="entry-body">
-          <h3>Co-Founder, Product and Engineering <span class="at">MartFlow</span></h3>
-          <p class="entry-place">Retail commerce SaaS</p>
-          <ul>
-            <li>Multi-tenant commerce platform integrated with Odoo ERP, with login, per-store catalogue and inventory, and an admin back office.</li>
-          </ul>
-        </div>
-      </li>
-
-      <li class="entry reveal">
-        <p class="entry-date">Aug 2025 to Oct 2025</p>
-        <div class="entry-body">
-          <h3>Backend Development Intern <span class="at">Dr Coders</span></h3>
-          <ul>
-            <li>Built and maintained REST APIs.</li>
-            <li>Agreed API contracts with frontend developers and shipped features to production.</li>
-          </ul>
-        </div>
-      </li>
-
-      <li class="entry reveal">
-        <p class="entry-date">2021 to present</p>
-        <div class="entry-body">
-          <h3>Amazon Operations and Integrations <span class="at">Freelance</span></h3>
-          <p class="entry-place">Remote</p>
-          <ul>
-            <li>Work with US clients on their Amazon operations.</li>
-            <li>Automate reporting with Python and Amazon's Selling Partner API.</li>
-          </ul>
-        </div>
-      </li>
-    </ol>
-  </div>
-</section>
-
-<!-- ===================== WORK ===================== -->
-<section class="chapter" id="work">
-  <div class="wrap">
-    <header class="chapter-head reveal"><span class="num">04</span><h2>Selected work</h2></header>
-
-    <ol class="works">
-      <li class="work reveal">
-        <p class="work-num">01</p>
-        <div class="work-body">
-          <h3>Point Eight</h3>
-          <p class="work-sub">Odoo operations app, the live system behind MartFlow's Qatar retailer</p>
-          <p>A Flask app on top of Odoo via XML-RPC, with 130 routes across the main app and 3 blueprints. It covers inventory dashboards, demand forecasting (Holt-Winters plus a combined model), stock sync to the Snoonu and Talabat delivery marketplaces, purchase orders, cash-outs, payroll, and an AI-written daily sales summary using Gemini or OpenAI.</p>
-          <p class="work-stack">Python · Flask · Odoo · SQLite · Playwright · Selenium</p>
-        </div>
-      </li>
-
-      <li class="work reveal">
-        <p class="work-num">02</p>
-        <div class="work-body">
-          <h3>Rentify</h3>
-          <p class="work-sub">Rental platform for Pakistan</p>
-          <p>The web app is React 18 and Vite with MUI and Tailwind. The API runs on Node 20 and Express with PostgreSQL via Prisma, JWT auth, Zod validation and interactive API docs. Listings get rule-based fraud scoring with an optional Python ML service, and there are separate roles for tenants and students, owners and admins. Deployed on Render with Docker, CI and 11 test files.</p>
-          <p class="work-stack">React · Vite · MUI · Tailwind · Node.js · Express · PostgreSQL · Prisma · Docker</p>
-        </div>
-      </li>
-
-      <li class="work reveal">
-        <p class="work-num">03</p>
-        <div class="work-body">
-          <h3><a href="https://github.com/HalimaF/Invoiceflow" target="_blank" rel="noopener">InvoiceFlow <span class="ext" aria-hidden="true">&#8599;</span></a></h3>
-          <p class="work-sub">Agentic accounts-payable automation</p>
-          <p>A state-machine orchestrator runs five agents: Intake, Validation, Matching, Approval and Vendor-query. LLM output is checked against a strict schema and self-corrects up to 3 times. It catches duplicate invoices and bank-account-change fraud, does 2-way PO matching, and logs every decision with its confidence and reasoning.</p>
-          <p class="work-stack">Python · LLM APIs · Multi-agent orchestration</p>
-        </div>
-      </li>
-
-      <li class="work reveal">
-        <p class="work-num">04</p>
-        <div class="work-body">
-          <h3>SheTrack+</h3>
-          <p class="work-sub">Women's health app</p>
-          <p>Cycle, symptom, mood and hydration tracking, plus journaling and phase-aware guidance. 104 automated tests, a clean <code>flutter analyze</code>, and CI.</p>
-          <p class="work-stack">Flutter · Dart · Provider · Firebase · Firestore · Cloud Functions</p>
-        </div>
-      </li>
-
-      <li class="work reveal">
-        <p class="work-num">05</p>
-        <div class="work-body">
-          <h3><a href="https://github.com/HalimaF/Repo-Radar" target="_blank" rel="noopener">Repo Radar <span class="ext" aria-hidden="true">&#8599;</span></a></h3>
-          <p class="work-sub">Chrome extension</p>
-          <p>A side panel that grades any GitHub repo from 0 to 100 on activity, bus factor, hygiene and CI, checks dependency vulnerabilities against OSV.dev, and draws the repo's real import graph as a zoomable diagram. No LLM, no runtime npm dependencies, and CI.</p>
-          <p class="work-stack">JavaScript · HTML/CSS · Chrome extension · OSV.dev</p>
-        </div>
-      </li>
-
-      <li class="work reveal">
-        <p class="work-num">06</p>
-        <div class="work-body">
-          <h3><a href="https://github.com/HalimaF/Mental-Health-chatbot" target="_blank" rel="noopener">Dil-e-Azaad <span class="ext" aria-hidden="true">&#8599;</span></a></h3>
-          <p class="work-sub">Mental health companion</p>
-          <p>A Flask app using Hugging Face models. Every message goes through two-layer crisis detection, rules plus a classifier. Messages are Fernet-encrypted at rest and the conversation keeps a rolling summary. 13 test files, CI, Docker and Render.</p>
-          <p class="work-stack">Python · Flask · Hugging Face · Docker · Render</p>
-        </div>
-      </li>
-
-      <li class="work reveal">
-        <p class="work-num">07</p>
-        <div class="work-body">
-          <h3>brandscan</h3>
-          <p class="work-sub">Amazon FBA wholesale screener</p>
-          <p>A Python CLI that screens a brand's catalogue through the Keepa API and works out the maximum unit cost that still meets a profit target. Built to stay inside a rate limit of 5 tokens per minute. 15 test files.</p>
-          <p class="work-stack">Python · Keepa API</p>
-        </div>
-      </li>
-    </ol>
-
-    <p class="work-sub reveal">Other projects</p>
-    <dl class="specimen">
-      <div class="specimen-row reveal"><dt><a href="https://github.com/HalimaF/FinAgentPro" target="_blank" rel="noopener">FinAgent Pro <span class="ext" aria-hidden="true">&#8599;</span></a></dt><dd>Multi-agent finance automation for the IBM watsonx Orchestrate Agentic AI Hackathon 2025. FastAPI, 5 orchestrated skills, webhooks.</dd></div>
-      <div class="specimen-row reveal"><dt><a href="https://github.com/HalimaF/Resume-Anlyzer-Maker" target="_blank" rel="noopener">Smart Resume Analyzer <span class="ext" aria-hidden="true">&#8599;</span></a></dt><dd>Flask, PyMuPDF and EasyOCR extraction, ATS scoring from 0 to 100, PDF report export.</dd></div>
-      <div class="specimen-row reveal"><dt>Flight booking site</dt><dd>Next.js 15, TypeScript, Tailwind, Radix UI.</dd></div>
-      <div class="specimen-row reveal"><dt><a href="https://github.com/HalimaF/GameMart" target="_blank" rel="noopener">GameMart <span class="ext" aria-hidden="true">&#8599;</span></a></dt><dd>React, Vite and MUI with Express, socket.io chat, and buyer, seller and admin roles.</dd></div>
-      <div class="specimen-row reveal"><dt>NestJS Products API</dt><dd>NestJS, TypeORM, MySQL, class-validator, bcrypt.</dd></div>
-      <div class="specimen-row reveal"><dt>Craftora</dt><dd>Flutter DIY community app with posts, likes, follows and community chat.</dd></div>
-      <div class="specimen-row reveal"><dt>Road Safety Detection</dt><dd>Custom annotated dataset, trained and fine-tuned YOLO models. Python, OpenCV, PyTorch.</dd></div>
-      <div class="specimen-row reveal"><dt>TenderX</dt><dd>In progress. My final-year project, a multi-agent system for Pakistani government tenders. Clickable prototype so far.</dd></div>
-    </dl>
-
-    <p class="works-more reveal">
-      More public code lives at <a href="https://github.com/HalimaF" target="_blank" rel="noopener">github.com/HalimaF <span class="ext" aria-hidden="true">&#8599;</span></a>
-    </p>
-  </div>
-</section>
-
-<!-- ===================== EDUCATION ===================== -->
-<section class="chapter" id="education">
-  <div class="wrap">
-    <header class="chapter-head reveal"><span class="num">05</span><h2>Education &amp; leadership</h2></header>
-
-    <dl class="specimen">
-      <div class="specimen-row reveal">
-        <dt>2023 to 2027</dt>
-        <dd>
-          <strong>BS Computer Science</strong>, Kinnaird College for Women, Lahore <em>(expected)</em>
-          <span class="quiet">Coursework: Machine Learning, Data Structures &amp; Algorithms, Database Systems, Operating Systems</span>
-        </dd>
+        <p class="ask-chips">
+          <button type="button" data-q="agentic AI multi-agent">Agentic AI</button>
+          <button type="button" data-q="React TypeScript Next.js">React</button>
+          <button type="button" data-q="Flutter mobile app">Flutter</button>
+          <button type="button" data-q="FastAPI backend API">FastAPI</button>
+          <button type="button" data-q="Odoo inventory forecasting">Odoo</button>
+        </p>
+        <div class="ask-results" id="askResults" aria-live="polite"></div>
+        <p class="ask-note" id="askNote">Ranked keyword search over the text on this page. No AI model, nothing invented.</p>
       </div>
-      <div class="specimen-row reveal">
-        <dt>Leadership</dt>
-        <dd>
-          <span class="line"><strong>Chairperson</strong>, IEEE (2026 to 2027)</span>
-          <span class="line"><strong>Logistics Director</strong>, IEEE Women in Engineering</span>
-          <span class="line"><strong>Senior Representative</strong>, Computer Science Club</span>
-          <span class="line"><strong>Ambassador</strong>, IEEE Xtreme 19.0</span>
-        </dd>
+    </section>
+
+    <!-- EDUCATION -->
+    <section id="education" class="sec" aria-labelledby="h-edu">
+      <h2 id="h-edu">Education and leadership</h2>
+      <ol class="list">
+        <li class="item">
+          <p class="when">2023 to 2027</p>
+          <div class="what">
+            <h3>BS Computer Science <span class="org">· Kinnaird College for Women</span></h3>
+            <p class="where">Lahore, expected 2027</p>
+            <p>Coursework: Machine Learning, Data Structures and Algorithms, Database Systems, Operating Systems.</p>
+          </div>
+        </li>
+        <li class="item">
+          <p class="when">Leadership</p>
+          <div class="what">
+            <ul class="roles">
+              <li><strong>Chairperson</strong>, IEEE <span class="muted">(2026 to 2027)</span></li>
+              <li><strong>Logistics Director</strong>, IEEE Women in Engineering</li>
+              <li><strong>Senior Representative</strong>, Computer Science Club</li>
+              <li><strong>Ambassador</strong>, IEEE Xtreme 19.0</li>
+            </ul>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="sec contact" aria-labelledby="h-contact">
+      <h2 id="h-contact">Let's work together</h2>
+      <p class="lead">Open to remote roles worldwide, from Lahore (UTC+5). Hiring for a full-stack or AI role, or need a product built? Email is the fastest way to reach me.</p>
+      <a class="mail" href="mailto:halima1939531@gmail.com">halima1939531@gmail.com</a>
+      <div class="ctas">
+        <a class="btn btn-primary" href="mailto:halima1939531@gmail.com">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+          Email me
+        </a>
+        <a class="btn" href="https://www.linkedin.com/in/halima-fahim-82960b1b2/" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="btn" href="tel:+923344615646">+92 334 4615646</a>
       </div>
-    </dl>
-  </div>
-</section>
+    </section>
 
-<!-- ===================== CONTACT ===================== -->
-<section class="chapter chapter-end" id="contact">
-  <div class="wrap">
-    <header class="chapter-head reveal"><span class="num">06</span><h2>Contact</h2></header>
+    <footer class="foot">
+      <p>&copy; <span id="year">2026</span> Halima Fahim. Hand-built HTML and CSS, no framework.</p>
+    </footer>
+  </main>
+</div>
 
-    <p class="closing reveal">
-      Open to remote roles worldwide, from Lahore (UTC+5). The fastest way to reach
-      me is email.
-    </p>
-
-    <p class="email-line reveal" data-delay="1">
-      <a href="mailto:halima1939531@gmail.com">halima1939531@gmail.com</a>
-    </p>
-
-    <dl class="colophon colophon-end reveal" data-delay="2">
-      <div><dt>Phone</dt><dd><a href="tel:+923344615646">+92 334 4615646</a></dd></div>
-      <div><dt>GitHub</dt><dd><a href="https://github.com/HalimaF" target="_blank" rel="noopener">github.com/HalimaF</a></dd></div>
-      <div><dt>LinkedIn</dt><dd><a href="https://www.linkedin.com/in/halima-fahim-82960b1b2/" target="_blank" rel="noopener">halima-fahim</a></dd></div>
-      <div><dt>CV</dt><dd><a href="Halima_Fahim_CV.pdf" download>Download PDF</a></dd></div>
-    </dl>
-  </div>
-</section>
-
-</main>
-
-<footer class="foot">
-  <div class="wrap foot-inner">
-    <span>&copy; <span id="year">2026</span> Halima Fahim</span>
-    <span class="quiet">Set in Bodoni Moda &amp; IBM Plex</span>
-    <a href="#top">Back to top &#8593;</a>
-  </div>
-</footer>
-
-<!-- hero3d first: app.js dispatches its first cv:ranked during parse,
-     so the listener has to be registered before app.js runs -->
-<script src="hero3d.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

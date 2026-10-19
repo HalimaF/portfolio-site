@@ -1,8 +1,7 @@
 /* =============================================================
-   Halima Fahim — editorial portfolio
-
-   Theme, reveals, counters, nav state, drawer, anchors, and the
-   retrieval engine in the hero.
+   Halima Fahim, portfolio
+   Theme, active section, mobile bar, anchors, and BM25 search
+   over the CV text.
    ============================================================= */
 (function () {
   'use strict';
@@ -11,133 +10,70 @@
   var $  = function (s, c) { return (c || document).querySelector(s); };
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
 
-  /* ---------- 1. THEME (paper / night) ---------- */
-  var root  = document.documentElement;
-  var label = $('#modeLabel');
+  /* ---------- 1. THEME (light / dark, follows the OS until chosen) ---------- */
+  var root = document.documentElement;
+  var darkQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
-  function applyTheme(name) {
-    root.setAttribute('data-theme', name);
-    if (label) label.textContent = name === 'night' ? 'Night' : 'Paper';
+  function isDark() {
+    var t = root.getAttribute('data-theme');
+    return t ? t === 'dark' : darkQuery.matches;
   }
-
-  var stored = null;
-  try { stored = localStorage.getItem('hf-theme'); } catch (e) {}
-
-  if (stored === 'paper' || stored === 'night') applyTheme(stored);
-  else if (window.matchMedia('(prefers-color-scheme: dark)').matches) applyTheme('night');
-  else applyTheme('paper');
-
-  var toggle = $('#themeToggle');
-  if (toggle) {
-    toggle.addEventListener('click', function () {
-      var next = root.getAttribute('data-theme') === 'night' ? 'paper' : 'night';
-      applyTheme(next);
-      try { localStorage.setItem('hf-theme', next); } catch (e) {}
+  function syncLabels() {
+    $$('[data-theme-toggle]').forEach(function (b) {
+      b.setAttribute('aria-label', isDark() ? 'Switch to light theme' : 'Switch to dark theme');
     });
   }
+  $$('[data-theme-toggle]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var next = isDark() ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('hf-theme', next); } catch (e) {}
+      syncLabels();
+    });
+  });
+  syncLabels();
 
   /* ---------- 2. YEAR ---------- */
   var yearEl = $('#year');
   if (yearEl) yearEl.textContent = String(new Date().getFullYear());
 
-  /* ---------- 3. REVEALS ---------- */
-  var revealables = $$('.reveal');
-  revealables.forEach(function (el) {
-    var d = el.getAttribute('data-delay');
-    if (d) el.style.setProperty('--d', d);
-  });
-
-  if (reduced || !('IntersectionObserver' in window)) {
-    revealables.forEach(function (el) { el.classList.add('in'); });
-  } else {
-    var obs = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) { entry.target.classList.add('in'); obs.unobserve(entry.target); }
-      });
-    }, { threshold: 0.1, rootMargin: '0px 0px -6% 0px' });
-    revealables.forEach(function (el) { obs.observe(el); });
-  }
-
-  /* ---------- 4. COUNTERS ---------- */
-  function runCount(el) {
-    var target = parseFloat(el.getAttribute('data-to')) || 0;
-    var suffix = el.getAttribute('data-suffix') || '';
-    if (reduced) { el.textContent = target + suffix; return; }
-
-    var duration = 1100, start = null;
-    function step(ts) {
-      if (start === null) start = ts;
-      var p = Math.min((ts - start) / duration, 1);
-      el.textContent = Math.round(target * (1 - Math.pow(1 - p, 3))) + (p === 1 ? suffix : '');
-      if (p < 1) requestAnimationFrame(step);
-    }
-    requestAnimationFrame(step);
-  }
-
-  var counters = $$('.count');
-  if (counters.length) {
-    if (!('IntersectionObserver' in window)) counters.forEach(runCount);
-    else {
-      var cObs = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) { runCount(entry.target); cObs.unobserve(entry.target); }
-        });
-      }, { threshold: 0.6 });
-      counters.forEach(function (el) { cObs.observe(el); });
-    }
-  }
-
-  /* ---------- 5. ACTIVE SECTION ---------- */
-  var navLinks = $$('.masthead-nav a');
-  var sections = navLinks
+  /* ---------- 3. ACTIVE SECTION + MOBILE BAR ---------- */
+  var tocLinks = $$('.toc a');
+  var sections = tocLinks
     .map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); })
     .filter(Boolean);
+  var mbar = $('#mbar'), side = $('.side');
 
   var ticking = false;
   function onScroll() {
     var y = window.scrollY || window.pageYOffset;
-    var line = y + window.innerHeight * 0.3;
-    var activeId = null;
+    var line = y + window.innerHeight * 0.35;
+    var activeId = sections.length ? sections[0].id : null;
     sections.forEach(function (sec) { if (sec.offsetTop <= line) activeId = sec.id; });
-    navLinks.forEach(function (a) {
+    // at the very bottom the last short section can never cross the line
+    if (window.innerHeight + y >= document.documentElement.scrollHeight - 4 && sections.length) {
+      activeId = sections[sections.length - 1].id;
+    }
+    tocLinks.forEach(function (a) {
       a.classList.toggle('active', a.getAttribute('href') === '#' + activeId);
     });
+    // mobile: the bar appears once the identity block (with its buttons) has scrolled away
+    if (mbar && side) mbar.classList.toggle('on', side.getBoundingClientRect().bottom < 0);
     ticking = false;
   }
   window.addEventListener('scroll', function () {
     if (!ticking) { ticking = true; requestAnimationFrame(onScroll); }
   }, { passive: true });
+  window.addEventListener('resize', onScroll);
   onScroll();
 
-  /* ---------- 6. DRAWER ---------- */
-  var menuBtn = $('#menuBtn'), drawer = $('#mobileMenu');
-  function setMenu(open) {
-    if (!menuBtn || !drawer) return;
-    menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
-    menuBtn.textContent = open ? 'Close' : 'Menu';
-    drawer.hidden = !open;
-  }
-  if (menuBtn) menuBtn.addEventListener('click', function () {
-    setMenu(menuBtn.getAttribute('aria-expanded') !== 'true');
-  });
-  if (drawer) drawer.addEventListener('click', function (e) {
-    if (e.target.closest('a')) setMenu(false);
-  });
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setMenu(false); });
-  window.addEventListener('resize', function () { if (window.innerWidth > 1000) setMenu(false); });
-
   /* =============================================================
-     7. RETRIEVAL OVER THE CV
+     4. SEARCH OVER THE CV
 
      A real ranked-retrieval engine, not a chat box. It indexes the
-     résumé below with BM25 — the standard lexical ranking function —
-     and returns the passages that actually match, scored.
-
-     It is deliberately NOT a language model. It cannot answer in
-     sentences, and it cannot invent anything: every word it shows is a
-     word already written further down the page. On a portfolio where
-     nothing else is fabricated, a hallucinating chatbot would be the
-     one dishonest thing on it.
+     CV text with BM25 and returns the passages that actually match,
+     scored. It cannot invent anything: every word it shows is a word
+     already written on the page.
 
      THE CORPUS IS THE ONLY THING TO EDIT. Add an entry and it becomes
      searchable; the index rebuilds on load.
@@ -160,33 +96,33 @@
       { s: 'Experience', t: 'Freelance, Amazon Operations', a: '#experience',
         x: 'Work with US clients since 2021. Automate reporting with Python and Amazon\'s Selling Partner API.' },
 
-      { s: 'Work', t: 'Point Eight', a: '#work',
+      { s: 'Work', t: 'Point Eight', a: '#projects',
         x: 'Flask app on top of Odoo via XML-RPC with 130 routes. Inventory dashboards, demand forecasting with Holt-Winters, stock sync to Snoonu and Talabat, purchase orders, cash-outs, payroll.' },
-      { s: 'Work', t: 'Point Eight', a: '#work',
+      { s: 'Work', t: 'Point Eight', a: '#projects',
         x: 'AI-written daily sales summary with Gemini or OpenAI. Python, Flask, Odoo, SQLite, Playwright, Selenium.' },
-      { s: 'Work', t: 'Rentify', a: '#work',
+      { s: 'Work', t: 'Rentify', a: '#projects',
         x: 'Rental platform for Pakistan. React 18, Vite, MUI and Tailwind on the web. Node 20, Express, PostgreSQL via Prisma, JWT auth and Zod validation on the API.' },
-      { s: 'Work', t: 'Rentify', a: '#work',
+      { s: 'Work', t: 'Rentify', a: '#projects',
         x: 'Rule-based fraud scoring with an optional Python ML service. Deployed on Render with Docker, CI and 11 test files.' },
-      { s: 'Work', t: 'InvoiceFlow', a: '#work',
+      { s: 'Work', t: 'InvoiceFlow', a: '#projects',
         x: 'Agentic accounts-payable automation. A state-machine orchestrator runs five agents. LLM output is checked against a strict schema and self-corrects.' },
-      { s: 'Work', t: 'InvoiceFlow', a: '#work',
+      { s: 'Work', t: 'InvoiceFlow', a: '#projects',
         x: 'Catches duplicate invoices and bank-account-change fraud, does 2-way PO matching, and logs every decision with confidence and reasoning.' },
-      { s: 'Work', t: 'SheTrack+', a: '#work',
+      { s: 'Work', t: 'SheTrack+', a: '#projects',
         x: 'Women\'s health mobile app in Flutter, Dart, Provider, Firebase, Firestore and Cloud Functions. Cycle, symptom, mood and hydration tracking. 104 automated tests.' },
-      { s: 'Work', t: 'Repo Radar', a: '#work',
+      { s: 'Work', t: 'Repo Radar', a: '#projects',
         x: 'Chrome extension that grades any GitHub repo from 0 to 100, checks dependency vulnerabilities against OSV.dev, and draws the import graph. JavaScript.' },
-      { s: 'Work', t: 'Dil-e-Azaad', a: '#work',
+      { s: 'Work', t: 'Dil-e-Azaad', a: '#projects',
         x: 'Mental health companion. Flask with Hugging Face models, two-layer crisis detection with a classifier, Fernet encryption at rest, Docker and Render.' },
-      { s: 'Work', t: 'brandscan', a: '#work',
+      { s: 'Work', t: 'brandscan', a: '#projects',
         x: 'Python CLI for Amazon FBA wholesale screening through the Keepa API. Computes the maximum unit cost that meets a profit target. 15 test files.' },
-      { s: 'Work', t: 'FinAgent Pro', a: '#work',
+      { s: 'Work', t: 'FinAgent Pro', a: '#projects',
         x: 'Multi-agent finance automation for the IBM watsonx Orchestrate Agentic AI Hackathon 2025. FastAPI, 5 orchestrated skills, webhooks.' },
-      { s: 'Work', t: 'Smart Resume Analyzer', a: '#work',
+      { s: 'Work', t: 'Smart Resume Analyzer', a: '#projects',
         x: 'Flask, PyMuPDF and EasyOCR extraction, ATS scoring from 0 to 100, PDF report export.' },
-      { s: 'Work', t: 'Other projects', a: '#work',
+      { s: 'Work', t: 'Other projects', a: '#projects',
         x: 'Flight booking site in Next.js 15 and TypeScript. GameMart in React and Express with socket.io chat. NestJS Products API with TypeORM and MySQL. Craftora Flutter community app.' },
-      { s: 'Work', t: 'Other projects', a: '#work',
+      { s: 'Work', t: 'Other projects', a: '#projects',
         x: 'Road Safety Detection with YOLO, OpenCV and PyTorch. TenderX, a multi-agent system for Pakistani government tenders, in progress.' },
 
       { s: 'Toolkit', t: 'Frontend', a: '#skills',
@@ -214,7 +150,7 @@
      + 'his her their your our i she he they them we you').split(' ')
       .forEach(function (w) { STOP[w] = 1; });
 
-    // crude suffix stripping — enough to bind plurals and gerunds together
+    // crude suffix stripping, enough to bind plurals and gerunds together
     function stem(w) {
       if (w.length > 5 && /ing$/.test(w)) return w.slice(0, -3);
       if (w.length > 4 && /(ed|es)$/.test(w)) return w.slice(0, -2);
@@ -287,11 +223,6 @@
     function render(q) {
       var res = search(q);
 
-      // additive: publish the ranking. Nothing downstream of this reads it back.
-      document.dispatchEvent(new CustomEvent('cv:ranked', {
-        detail: { query: q, terms: res.terms, all: res.all || [], corpus: CORPUS }
-      }));
-
       if (!res.terms.length) {
         results.innerHTML = '<p class="ask-empty">Type a term, or pick one above.</p>';
         return;
@@ -322,47 +253,13 @@
 
     $$('.ask-chips button').forEach(function (b) {
       b.addEventListener('click', function () {
-        input.value = b.getAttribute('data-q');
-        render(input.value);
-        input.focus();
+        input.value = b.textContent;
+        render(b.getAttribute('data-q'));
       });
     });
-
-    /* ---- demonstrate itself ----------------------------------------
-       People do not read a label above an empty search box; they read a
-       box that is visibly doing something. So on load it types a query
-       itself, one character at a time, re-ranking as it goes. Any real
-       interaction cancels it immediately and hands control back. */
-    var demoTimer = null, demoLive = false;
-
-    function stopDemo() {
-      demoLive = false;
-      clearTimeout(demoTimer);
-    }
-
-    ['focus', 'keydown', 'input', 'pointerdown'].forEach(function (ev) {
-      input.addEventListener(ev, stopDemo);
-    });
-
-    if (reduced) {
-      input.value = 'agentic AI';
-      render(input.value);
-    } else {
-      render('agentic AI multi-agent');       // something on screen at once
-      demoLive = true;
-      var phrase = 'fraud detection', ci = 0;
-
-      demoTimer = setTimeout(function tick() {
-        if (!demoLive) return;
-        ci++;
-        input.value = phrase.slice(0, ci);
-        render(input.value);
-        if (ci < phrase.length) demoTimer = setTimeout(tick, 80);
-      }, 1100);
-    }
   })();
 
-  /* ---------- 8. ANCHORS ---------- */
+  /* ---------- 5. ANCHORS: move focus with the scroll ---------- */
   $$('a[href^="#"]').forEach(function (a) {
     a.addEventListener('click', function (e) {
       var id = a.getAttribute('href');

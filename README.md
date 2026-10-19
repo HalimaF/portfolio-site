@@ -1,221 +1,39 @@
-# Halima Fahim — portfolio
+# Halima Fahim, portfolio
 
-A single-page editorial portfolio. No build step, no framework, no dependencies.
-Three files do all of it.
+Live at https://portfoliohalima.netlify.app
+
+A single-page portfolio. Plain HTML, CSS and JS, no framework, no dependencies.
 
 | File | What it holds |
 |---|---|
 | `index.html` | Every word on the page |
-| `styles.css` | The whole visual system; tokens are at the top |
-| `app.js` | Theme, reveals, counters, nav state, drawer, anchors, BM25 retrieval |
-| `hero3d.js` | The retrieval space in the hero (self-contained, deletable) |
-| `Halima_Fahim_CV.pdf` | Linked from the hero and the contact section |
-| `serve.py` | Local preview server (not part of the deployed site) |
+| `styles.css` | The whole visual system; colour tokens for light and dark are at the top |
+| `app.js` | Theme toggle, active section nav, mobile bar, anchors, CV search |
+| `assets/halima.jpg` | Headshot |
+| `assets/projects/` | Project screenshots (see below) |
+| `Halima_Fahim_CV.pdf` | Linked from the Download CV buttons |
+| `DESIGN.md` / `PRODUCT.md` | Design system and product notes |
 
----
-
-## Run it
-
-Double-click `index.html` — it works straight from the filesystem.
-
-To serve it over HTTP instead:
+## Run it locally
 
 ```bash
-python serve.py               # opens http://localhost:8000
-python serve.py 8000 lan      # also reachable from your phone on the same wifi
+python serve.py        # http://localhost:8000, caching disabled
 ```
 
-`serve.py` disables caching on purpose. Python's plain `http.server` sends no
-`Cache-Control` header, so browsers keep serving a stale `styles.css` after an
-edit — which will cost you an hour if you hit it.
+## Deploy
 
----
-
-## Put it online
-
-**GitHub Pages:** create a repo, push these files to `main`, then
-Settings → Pages → Deploy from a branch → `main` / `/ (root)`.
-Name the repo exactly `HalimaF.github.io` and it serves at
-`https://halimaf.github.io/`.
-
-**Netlify / Vercel / Cloudflare Pages:** drag the folder in. No build command,
-publish directory `.`.
-
-Don't deploy `serve.py`, `_archive/` or `.impeccable/` — all three are
-gitignored already.
-
----
-
-## The design
-
-An editorial layout run loud: white ground, true-black text, and one electric
-accent used in large blocks. The structure is still typographic — hairline
-rules, no cards, no gradients — but the contrast is high and the accent is
-unmissable.
-
-Deliberately **not** used, because each is a signature of the generated-portfolio
-look this replaced:
-
-- gradients of any kind, including gradient-filled text
-- glow, bloom and drop shadows
-- glassmorphism / backdrop-blurred cards
-- floating blurred orbs
-- pill-shaped buttons
-- card grids
-
-Structure comes from hairline rules. Emphasis comes from the single accent.
-If you add a section, keep to that and it will fit.
-
-**Type**
-
-| Role | Face |
-|---|---|
-| Display | Bodoni Moda (the name, section headings, pull quotes) |
-| Body | IBM Plex Sans |
-| Labels, meta, numbers | IBM Plex Mono, uppercase, letterspaced |
-
-**Colour** — the top of `styles.css`. Change these four and the whole site
-follows:
-
-```css
---paper:     #FFFFFF;   /* near-white */
---ink:       #0A0A0A;   /* true black */
---accent:    #FF3B00;   /* electric orange-red */
---on-accent: #0A0A0A;   /* text ON the accent — black, not white */
+```bash
+netlify deploy --build          # draft preview
+netlify deploy --build --prod   # live
 ```
 
-The accent is used in **blocks**, not just marks: the stats band is a solid
-field of it, every chapter head carries a bar of it, and the primary button is
-filled with it. Text sitting on the accent is black — white on this orange
-fails contrast at small sizes.
+`netlify.toml` copies only the public files (`index.html`, `styles.css`, `app.js`, the CV and `assets/`) into `dist/`, so `_archive/`, `.impeccable/` and `serve.py` are never published. If you add a new top-level file the page needs, add it to the list in `netlify.toml`.
 
-There are two themes, `paper` and `night`, defined in that same block. `night`
-is a warm dark — deliberately not blue-black. The toggle sits in the masthead
-and remembers your choice; with no choice stored it follows your OS setting.
+The Netlify site is still connected to the old `HalimaF/Portfolio` repo. To deploy on every push, link this repo in Netlify: Site configuration, Build & deploy, Link repository.
 
----
+## Editing
 
-## Editing it
-
-**Text** — `index.html`, directly. Sections are marked with comment banners
-(`<!-- ===== WORK ===== -->`).
-
-**Adding a project** — copy a `<li class="work">` block and edit it. Bump the
-`work-num`. Drop the `<a>` wrapper on the `<h3>` if there's no repo to link.
-
-**Adding an experience entry** — copy a `<li class="entry">` block. The date
-column and the body are two grid cells; leave the structure alone and it lines
-up.
-
-**The ledger numbers** — `data-to` is the figure each one counts up to.
-
----
-
-## Ask my CV — the retrieval engine
-
-The hero is not a graphic. It is a working search engine over the resume
-further down the page.
-
-Type a term and it runs **BM25** — the standard lexical ranking function used
-by Lucene and Elasticsearch — over the CV passages, and returns the ones that
-actually match, ranked, scored, with the matched words highlighted and a link
-to the section they came from.
-
-**It is deliberately not a chatbot.** It has no model and no server. It cannot
-answer in sentences, and it cannot invent anything: every word it displays is a
-word already written further down the page. On a portfolio where nothing else
-is fabricated, a hallucinating chat box would be the one dishonest thing on it.
-
-It arrives already showing results, so nobody has to guess what the box does.
-
-**The corpus is the only thing to edit.** `CORPUS` at the top of section 7 in
-`app.js` is a flat array:
-
-```js
-{ s: 'Experience', t: 'AI Intern, Systems Limited', a: '#experience',
-  x: 'Built agentic AI workflows for an enterprise client using LangChain...' }
-```
-
-`s` is the section label, `t` the title, `a` the anchor it links to, `x` the
-searchable text. Add an entry and it is indexed on the next load — the index
-rebuilds itself.
-
-`K1` and `B` just below it are the BM25 parameters (term-frequency saturation
-and length normalisation). The defaults, 1.5 and 0.75, are the standard ones.
-
----
-
-## The retrieval space
-
-Under the search box, every passage in the CV is a point in 3D. They sit in
-five clusters, one per section, so the space is legible before you type. Run a
-query and matching passages advance toward the camera and brighten in
-proportion to their BM25 score; the rest recede and dim. The top hit is named.
-
-It shows the **whole** corpus, not just the four passages the list has room
-for. That is the only thing the picture can tell you that the list cannot, and
-the only reason it earns its place.
-
-It computes nothing. `app.js` dispatches a `cv:ranked` CustomEvent carrying the
-full ranking, and `hero3d.js` listens. The BM25 code is untouched.
-
-**No library.** The 3D is a rotation, a perspective divide and a depth sort.
-Vendoring three.js to draw twenty circles would have cost 670,681 bytes — 57x
-the entire feature and 13x the whole site.
-
-**To remove it:** delete `hero3d.js`, its `<script>` tag, and the
-`<div class="space">` block in `index.html`. Verified: with those gone the hero
-is exactly what it was, with no console errors.
-
-It does not render below 768px, and it removes itself if the 2D canvas context
-is unavailable. Under `prefers-reduced-motion` it draws a static frame and
-starts no animation loop.
-
----
-
-## Motion
-
-Otherwise restrained by design: a short fade-and-rise as each block enters the
-viewport, counters that tick up once, and an underline that grows under the
-active nav link. No parallax, no scroll-jacking.
-
-`data-delay` on a `.reveal` element staggers it (`1` = 70ms, `2` = 140ms, and
-so on).
-
-Under `prefers-reduced-motion: reduce` everything renders in place instantly.
-That is a real skip, not a slowdown.
-
----
-
-## Checked
-
-- No horizontal overflow at 320 / 360 / 390 / 430 / 768 / 1024 / 1280 / 1440 /
-  1920px, measured as `documentElement.scrollWidth === clientWidth`
-- Both themes, paper and night
-- Retrieval verified end to end: every preset query returns a correctly
-  ranked result set (`FastAPI` surfaces the backend work, `document AI`
-  surfaces FinAgent Pro), terms are highlighted, and each hit links to its
-  section
-- Keyboard navigable: skip link, focus-visible rings, anchors move focus to the
-  section they point at
-- Prints cleanly — the masthead and drawer drop out
-
-Not checked: real mobile hardware, and browsers other than Chrome.
-
----
-
-## Content notes
-
-Everything on the page comes from the CV. Nothing is invented — there are no
-metrics, client names or accuracy figures, because those weren't in the CV and
-an unverifiable number is worse than no number.
-
-Two things worth adding when you have them:
-
-1. **Real figures on the projects.** If you measured anything on FinAgent Pro —
-   extraction accuracy, documents per minute, review hours saved — that is the
-   single most persuasive thing you could add.
-2. **A live demo link** for anything deployed.
-
-The previous version of this site is in `_archive/`, and the full history is in
-git if you want any of it back.
+- **Text:** edit `index.html` directly. No em or en dashes in the copy.
+- **Project screenshot:** save the image in `assets/projects/` (for example `point-eight.jpg`, about 1200px wide), then uncomment the `<img class="shot">` line inside that project in `index.html`.
+- **New project:** copy one `<li class="item project">` block. For a public repo, wrap the title in `<a class="stretch" href="...">` so the whole row becomes a link.
+- **CV search:** the searchable text is the `CORPUS` array in `app.js`. Add an entry when you add content and it is indexed on the next load.
